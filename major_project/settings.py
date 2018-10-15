@@ -25,7 +25,9 @@ SECRET_KEY = 'fgl(--=1-r@fpv4nk7f2(*mn#4ojmu72qc)^sw@dmqj9#2z5pt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    
+]
 
 
 # Application definition

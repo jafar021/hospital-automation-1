@@ -12,30 +12,6 @@
  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
  <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
   
-<!-- for auto completion -->
-  <script>
-   jQuery(function() {
-   $("#id_input").on('keyup', function(){
-       var value = $(this).val();
-       $.ajax({
-           url: "http://localhost:8000/api/autocomplete",
-           data: {
-             'search': value
-           },
-           dataType: 'json',
-           success: function (data) {
-               list = data.list;
-               $("#id_input").autocomplete({
-               source: list,
-               minLength: 3
-               });
-           }
-       });
-   });
- });
-   </script>
-
-
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 .mySlides {display:none}
@@ -46,10 +22,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
   <div class="w3-container w3-display-container w3-padding-16">
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>View existing Patient</button></p>
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Helpers</button></p>
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Doctors on duty</button></p>
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Statistics</button></p>
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>View existing Patient</button></p>
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Helpers</button></p>
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Doctors on duty</button></p>
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Statistics</button></p>
     </form>
   </div>
 </nav>
@@ -85,17 +61,16 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
     <i class="fa fa-phone" style="width:30px"></i> Phone: +00 151515<br>
     <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
     <p>Questions? Go ahead, ask them:</p> -->
-    <form action="/action_page.php" target="_blank">
+    <form action="/reception" method="POST">{% csrf_token %}
       <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="First Name" required name="First Name" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Last Name" required name="Last Name" style="flex:2; margin-left:5px"></p>
-      <p><input class="w3-input w3-border" type="text" placeholder="Father's name" required name="Father's name"></p>
-      <p><input class="w3-input w3-border" type="text" placeholder="Address 1" required name="Address 1"></p>
-      <p><input class="w3-input w3-border" type="text" placeholder="Address 2" required name="Address 2"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Father name" required name="Father name"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Address" required name="Address"></p>
       <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="City" required name="City" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="State" required name="State" style="flex:1; margin-left:5px"></p>
       <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="Postal/ZIP code" required name="Postal/ZIP code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Country" required name="Country" style="flex:1; margin-left:5px"></p>
-      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="+91" required name="" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Contact Number" required name="Contact Number" style="flex:4; margin-right:225px"></p>
-      <p><input class="w3-input w3-border" type="date" name="todays date" style="width:30%"></p>
-      <input class="w3-input w3-border" type="text" placeholder="Problem" style="width:45%; margin-top:10px; margin-bottom:15px" id="id_input">
-      <input class="w3-input w3-border" type="text" placeholder="Dr." style="width:45%; margin-bottom:15px" id="id_input">
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="+91" required name="country code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Contact Number" required name="Contact Number" style="flex:4; margin-right:225px"></p>
+      <p><input class="w3-input w3-border" type="date" name="todays date" required name="date" style="width:30%"></p>
+      <input class="w3-input w3-border" type="text" placeholder="problem" required name="problem" style="width:45%; margin-top:10px; margin-bottom:15px" id="id_input">
+      <input class="w3-input w3-border" type="text" placeholder="Dr." required name="Doctor name" style="width:45%; margin-bottom:15px" id="input">
     <button type="submit" class="w3-button w3-teal w3-third" style="float:right; margin-top:10px; margin-bottom:15px">Send to Doctor</button>
     </form>
  
@@ -140,6 +115,30 @@ function showDivs(n) {
   dots[slideIndex-1].className += " w3-opacity-off";
 }
 </script>
+
+<!-- for auto completion -->
+<script>
+  jQuery(function() {
+  $("#id_input").on('keyup', function(){
+      var value = $(this).val();
+      value = value.toLowerCase();
+      $.ajax({
+          url: "/reception/ajax/1",
+          data: {
+            'search': value
+          },
+          dataType: 'json',
+          success: function (data) {
+              list = data.list;
+              $("#id_input").autocomplete({
+              source: list,
+              minLength: 1
+              });
+          }
+      });
+  });
+});
+  </script>
 
 </body>
 </html>
