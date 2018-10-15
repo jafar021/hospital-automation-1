@@ -40,10 +40,3 @@ class helpers_nurses(models.Model):
 class medicines(models.Model):
     name = models.CharField(max_length = 120)
     price = models.IntegerField()
-
-    
-
-
-
-
-
