@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class user_type(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     flag = models.IntegerField()
-    specialization = models.CharField(max_length = 1200)
+    specialization = models.CharField(max_length = 1200, default = 'NULL')
 
 class patient(models.Model):
     first_name = models.CharField(max_length = 1200)
@@ -22,6 +22,7 @@ class patient(models.Model):
     address = models.CharField(max_length = 1200)
     problem_name = models.CharField(max_length = 1200)
     assigned_doctor = models.CharField(max_length = 1200)
+    is_seen = models.BooleanField(default=False)
 
 class patient_history(models.Model):       
     user = models.ForeignKey(patient, on_delete=models.CASCADE, related_name='user')

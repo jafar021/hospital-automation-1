@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import patient
+from .models import patient, user_type
 from django.conf.urls import *
+from django.http.response import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def doctors():
     pass
@@ -27,7 +29,21 @@ def reception(request):
                                 country_code=country_code, phone_number=contact_number, date=date, problem_name=problem, assigned_doctor=alloted_doctor)
         
         return redirect('reception')       
- 
+
+@csrf_exempt
+def autocomplete(request, id):
+    if request.is_ajax():
+        queryset = user_type.objects.filter(specialization__startswith=request.GET['search'])
+        list = []        
+        for i in queryset:
+            if i.specialization not in list:
+                list.append(i.specialization)
+        data = {
+            'list': list,
+        }
+        return JsonResponse(data)
+    if request.method == 'GET':
+        return render(request,'reception.html',{})
 
 
 
