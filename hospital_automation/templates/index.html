@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<title>Patient Registration</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- bootstrap-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+ <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+  
+<!-- for auto completion -->
+  <script>
+   jQuery(function() {
+   $("#id_input").on('keyup', function(){
+       var value = $(this).val();
+       $.ajax({
+           url: "http://localhost:8000/api/autocomplete",
+           data: {
+             'search': value
+           },
+           dataType: 'json',
+           success: function (data) {
+               list = data.list;
+               $("#id_input").autocomplete({
+               source: list,
+               minLength: 3
+               });
+           }
+       });
+   });
+ });
+   </script>
+
+
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+.mySlides {display:none}
+</style>
+<body class="w3-content w3-border-left w3-border-right">
+
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
+  <div class="w3-container w3-display-container w3-padding-16">
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>View existing Patient</button></p>
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Helpers</button></p>
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Doctors on duty</button></p>
+      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Statistics</button></p>
+    </form>
+  </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-bar w3-top w3-hide-large w3-teal w3-xlarge">
+  <span class="w3-bar-item" style="float:center">MountBlue Hospital</span>
+  <a href="javascript:void(0)" class="w3-right w3-bar-item w3-button" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-white" style="margin-left:260px">
+
+  <!-- Push down content on small screens -->
+  <div class="w3-hide-large" style="margin-top:80px"></div>
+
+  <!-- Slideshow Header -->
+  <div class="w3-bar w3-teal w3-hide-small w3-xlarge" >
+      <h2 class="w3-text-white" style="text-align:center">MountBlue Hospital</h2>
+    </div>
+
+
+  <div class="w3-container" style="margin-top:15px" id="apartment">
+    <h2 class="w3-text-teal" style="text-align:center">Patient Record</h2>
+  </div>
+  <div class="w3-container" id="contact">
+    
+    <!-- <h2>Contact</h2>
+    <i class="fa fa-map-marker" style="width:30px"></i> Chicago, US<br>
+    <i class="fa fa-phone" style="width:30px"></i> Phone: +00 151515<br>
+    <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
+    <p>Questions? Go ahead, ask them:</p> -->
+    <form action="/action_page.php" target="_blank">
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="First Name" required name="First Name" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Last Name" required name="Last Name" style="flex:2; margin-left:5px"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Father's name" required name="Father's name"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Address 1" required name="Address 1"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Address 2" required name="Address 2"></p>
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="City" required name="City" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="State" required name="State" style="flex:1; margin-left:5px"></p>
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="Postal/ZIP code" required name="Postal/ZIP code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Country" required name="Country" style="flex:1; margin-left:5px"></p>
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="+91" required name="" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Contact Number" required name="Contact Number" style="flex:4; margin-right:225px"></p>
+      <p><input class="w3-input w3-border" type="date" name="todays date" style="width:30%"></p>
+      <input class="w3-input w3-border" type="text" placeholder="Problem" style="width:45%; margin-top:10px; margin-bottom:15px" id="id_input">
+      <input class="w3-input w3-border" type="text" placeholder="Dr." style="width:45%; margin-bottom:15px" id="id_input">
+    <button type="submit" class="w3-button w3-teal w3-third" style="float:right; margin-top:10px; margin-bottom:15px">Send to Doctor</button>
+    </form>
+ 
+
+<script>
+// Script to open and close sidebar when on tablets and phones
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+}
+
+// Slideshow Apartment Images
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function currentDiv(n) {
+  showDivs(slideIndex = n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+     dots[i].className = dots[i].className.replace(" w3-opacity-off", "");
+  }
+  x[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " w3-opacity-off";
+}
+</script>
+
+</body>
+</html>
