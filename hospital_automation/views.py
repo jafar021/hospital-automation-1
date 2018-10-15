@@ -3,6 +3,6 @@ from django.shortcuts import render
 def doctors():
     pass
 
-def index():
-def reception():
-    pass
+def reception(request): 
+    return render(request, 'reception.html', {})
+
