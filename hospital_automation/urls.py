@@ -7,3 +7,4 @@ urlpatterns = [
     
     path('reception', views.index, name="reception"),
 ]
+
