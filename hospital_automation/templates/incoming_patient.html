@@ -1,0 +1,18 @@
+{% extends 'doctor.html' %}
+{% load staticfiles %} 
+<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+{% block hide %}{% endblock %}
+{% block incoming_patient_block %}
+     <div class="card-container">
+           <div id="patient_name" class="card">
+              <div class="container">
+                 
+              </div>
+           </div>
+        </div>
+<script>
+$(function () {
+    setInterval(receive_patient,1000)
+})
+</script>
+{% endblock %}

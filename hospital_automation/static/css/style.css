@@ -1,0 +1,25 @@
+
+.card-container{
+    width:100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgb(0,128,128);
+    transition: 0.3s;
+    width: 100%;
+    border-radius: 5px;
+    margin: 20px 30px 20px 30px;
+}
+
+
+.card:hover {
+    box-shadow: 16px 16px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+    width: 100%;
+    padding: 2px 16px;
+}
