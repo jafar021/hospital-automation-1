@@ -6,5 +6,6 @@ from . import views
 urlpatterns = [
     
     path('reception', views.reception, name="reception"),
+    path('reception/ajax/<int:id>', views.autocomplete, name="autocomplete")
 ]
 
