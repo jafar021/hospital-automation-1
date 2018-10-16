@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+from .database_conf import DBNAME, DBPASS, DBUSER
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -26,7 +27,7 @@ SECRET_KEY = 'fgl(--=1-r@fpv4nk7f2(*mn#4ojmu72qc)^sw@dmqj9#2z5pt'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    
+
 ]
 
 
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'major_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,9 +80,9 @@ WSGI_APPLICATION = 'major_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hospital_management',
-        'USER': 'dell',
-        'PASSWORD': 'mayank',
+        'NAME': DBNAME,
+        'USER': DBUSER,
+        'PASSWORD': DBPASS,
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -125,3 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/'
