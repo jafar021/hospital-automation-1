@@ -70,7 +70,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="+91" required name="country code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Contact Number" required name="Contact Number" style="flex:4; margin-right:225px"></p>
       <p><input class="w3-input w3-border" type="date" name="todays date" required name="date" style="width:30%"></p>
       <input class="w3-input w3-border" type="text" placeholder="problem" required name="problem" style="width:45%; margin-top:10px; margin-bottom:15px" id="id_input">
-      <input class="w3-input w3-border" type="text" placeholder="Dr." required name="Doctor name" style="width:45%; margin-bottom:15px" id="input">
+      <input class="w3-input w3-border" type="text" placeholder="Doctor name" required name="Doctor name" style="width:45%; margin-top:10px; margin-bottom:15px" id="input">
+      
     <button type="submit" class="w3-button w3-teal w3-third" style="float:right; margin-top:10px; margin-bottom:15px">Send to Doctor</button>
     </form>
  
@@ -139,6 +140,32 @@ function showDivs(n) {
   });
 });
   </script>
+
+<script>
+  $("#id_input").change(function () {
+    // var url = $("#reception").attr("data-cities-url");  // get the url of the `load_cities` view
+    var problem = $(this).val();  // get the selected problem ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+      url: "/reception/ajax/load-doctors",                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'problem': problem       // add the problem id to the GET parameters
+      },
+      dataType: 'json',
+      success: function (data) {
+              list = data.list;
+              $("#input").autocomplete({
+              source: list,
+              minLength: 1
+              });
+          }
+    });
+
+  });
+
+  
+</script>
+
 
 </body>
 </html>

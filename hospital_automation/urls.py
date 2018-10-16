@@ -5,6 +5,12 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name="index"),
-    path('reception/', views.reception, name="reception"),
-    path('reception/ajax/<int:id>', views.autocomplete, name="autocomplete")
+    path('doctors', views.doctors, name='doctors'),
+    path('api/receive_incoming_patient',
+         views.receive_patient, name='incoming_patient'),
+    path('reception', views.reception, name="reception"),
+    path('reception/ajax/<int:id>', views.autocomplete, name="autocomplete"),
+    path('doctor/<int:patient_id>', views.prescriptions, name="prescriptions"),
+    path('reception/ajax/load-doctors',
+         views.load_doctors, name='ajax_load_doctors'),
 ]
