@@ -26,7 +26,7 @@ SECRET_KEY = 'fgl(--=1-r@fpv4nk7f2(*mn#4ojmu72qc)^sw@dmqj9#2z5pt'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    
+
 ]
 
 
@@ -80,8 +80,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'hospital_management',
-        'USER': 'dell',
-        'PASSWORD': 'mayank',
+        'USER': 'dev',
+        'PASSWORD': 'dev',
         'HOST': 'localhost',
         'PORT': '',
     }
