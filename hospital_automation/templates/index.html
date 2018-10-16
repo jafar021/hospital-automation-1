@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <title>Patient Registration</title>
@@ -18,9 +19,23 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 </style>
 <body class="w3-content w3-border-left w3-border-right">
 
+  <!-- sidebar -->
+  <nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+      <div class="" style="height: 150px;">
+
+      </div>
+        <p><a href="reception" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Reception</button></a></p>
+        <p><a href="doctors" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Doctor</button></a></p>
+        <p><a href="#" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Dispensary</button></a></p>
+        <p><a href="#" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Test</button></a></p>
+        <p><a href="accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
+      </form>
+    </div>
+  </nav>
 <!-- Top menu on small screens -->
 <header class="w3-bar w3-top w3-hide-large w3-teal w3-xlarge">
-  <span class="w3-bar-item" style="float:center">MountBlue Hospital</span>
+  <span class="w3-bar-item" style="float:center"><a href="/" style="text-decoration: none;">MountBlue Hospital</a></span>
   <a href="javascript:void(0)" class="w3-right w3-bar-item w3-button" onclick="w3_open()"><i class="fa fa-bars"></i></a>
 </header>
 
@@ -35,7 +50,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
   <!-- Slideshow Header -->
   <div class="w3-bar w3-teal w3-hide-small w3-xlarge" >
-      <h2 class="w3-text-white" style="text-align:center">MountBlue Hospital</h2>
+      <h2 class="w3-text-white" style="text-align:center"><a href="/" style="text-decoration: none;">MountBlue Hospital</a></h2>
     </div>
 
 
@@ -47,12 +62,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
   </div>
 
-  <div class="w3-container w3-display-container w3-padding-16">
-      <p><a href="reception" class="w3-button w3-block w3-teal w3-left-align"><i class="fa w3-margin-right"></i>Reception</a></p>
-      <p><a href="doctors" class="w3-button w3-block w3-teal w3-left-align"><i class="fa w3-margin-right"></i>Doctor</a></p>
-      <p><a href="#" class="w3-button w3-block w3-teal w3-left-align"><i class="fa w3-margin-right"></i>Dispensary</a></p>
-      <p><a href="#" class="w3-button w3-block w3-teal w3-left-align"><i class="fa w3-margin-right"></i>Test</a></p>
+  <div class="image">
+    <img src="{% static 'hospital.jpg' %}" style="width: 720px;" alt="">
   </div>
+
+
 
 
 <script>
