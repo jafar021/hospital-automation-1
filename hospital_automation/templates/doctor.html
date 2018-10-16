@@ -85,8 +85,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
  
  {% comment %} Patient block {% endcomment %}
     <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
+           {% if '/doctor/' in request.path %}
+           {% block patient_prescriptions %}
+           {% endblock %}
+           {% else %} 
            {% block incoming_patient_block %}
            {% endblock %}
+           {% endif %}
     </div>
 <script>
 // Script to open and close sidebar when on tablets and phones
