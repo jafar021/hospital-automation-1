@@ -1,3 +1,7 @@
+{% if user_group %}
+  <p>You need to be logged in as {{ user_group }}</p>
+{% endif %}
+
 <ul>
   <li><a href="reception">Reception</a></li>
   <li><a href="doctors">Doctor</a></li>
