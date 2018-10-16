@@ -1,0 +1,91 @@
+{% extends 'doctor.html' %}
+{% load staticfiles %} 
+<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% block hide %}{% endblock %}
+{% block patient_prescriptions %}
+<div class="body">
+    <h3>Dr.Munna bhai</h3>
+    <h4>Date:</h4>
+    <br>
+    <br>
+    <h3>Patient name</h3>
+    <h4>Age:</h4>
+    <br>
+    <h4>Diagnosis</h4>
+    <form action="#" method="POST">
+    <div class = "diagnosis">
+      <textarea rows="10" cols="50"></textarea>
+      <div class = "aditional-diagnosis">
+        <p>BP: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;<input type = "text"></p>
+        <p>Weight:&nbsp; &nbsp;&nbsp;&nbsp;<input type = "text"></p>
+        <p>Sugar:&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<input type = "text"></p>
+      </div>
+    </div>
+
+    <div class="input_fields_wrap">
+     <div class="medicine-detail">
+        <input class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="mytext[]" style="margin-left:-11px">
+        <input type = "checkbox">
+        <input type = "checkbox">
+        <input type = "checkbox">
+     </div>
+    </div>
+    <button class="add_field_button">+</button>
+    <div>
+      tests: <input type="checkbox" id="trigger" name="question">
+    </div>
+    <div id="hidden_fields">
+      name:<input type = "text">
+    </div>
+
+  </form>   
+{% comment %} <form action="/" method="POST">{% csrf_token %}
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="First Name" required name="First Name" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Last Name" required name="Last Name" style="flex:2; margin-left:5px"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Father name" required name="Father name"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Address" required name="Address"></p>
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="City" required name="City" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="State" required name="State" style="flex:1; margin-left:5px"></p>
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="Postal/ZIP code" required name="Postal/ZIP code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Country" required name="Country" style="flex:1; margin-left:5px"></p>
+      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="+91" required name="country code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Contact Number" required name="Contact Number" style="flex:4; margin-right:225px"></p>
+      <p><input class="w3-input w3-border" type="date" name="todays date" required name="date" style="width:30%"></p>
+      <input class="w3-input w3-border" type="text" placeholder="problem" required name="problem" style="width:45%; margin-top:10px; margin-bottom:15px" id="id_input">
+      <input class="w3-input w3-border" type="text" placeholder="Dr." required name="Doctor name" style="width:45%; margin-bottom:15px" id="input">
+    <button type="submit" class="w3-button w3-teal w3-third" style="float:right; margin-top:10px; margin-bottom:15px">Send to Doctor</button>
+</form> {% endcomment %}
+</div>
+<script>
+$(function() {
+  var checkbox = $("#trigger");
+  var hidden = $("#hidden_fields");
+  var populate = $("#populate");
+  hidden.hide();
+  checkbox.change(function() {
+    if (checkbox.is(':checked')) {
+      hidden.show();
+      populate.val("Dude, this input got populated!");
+    } else {
+      hidden.hide();
+    }
+  });
+});
+$(document).ready(function() {
+	var max_fields      = 10;
+	var wrapper   		= $(".input_fields_wrap");
+	var add_button      = $(".add_field_button");
+	
+	var x = 1;
+
+	$(add_button).click(function(e){ 
+		e.preventDefault();
+		if(x < max_fields){ 
+			x++;
+			$(wrapper).append('<div class="medicine-detail"><input class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="mytext[]" style="margin-right:5px"><input name="'+ x +' " type = "checkbox"><input name="'+ x +' " type = "checkbox"><input name="'+ x +' " type = "checkbox"><button href="#" class="remove_field">-</button></div>');
+		}
+	});
+	
+	$(wrapper).on("click",".remove_field", function(e){
+		e.preventDefault(); $(this).parent('div').remove(); x--;
+	})
+});
+</script>
+{% endblock %}

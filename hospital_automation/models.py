@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class user_type(models.Model):
+class User_type(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     flag = models.IntegerField()
     specialization = models.CharField(max_length = 1200, default = 'NULL')
 
-class patient(models.Model):
+class Patient(models.Model):
     first_name = models.CharField(max_length = 1200)
     last_name = models.CharField(max_length = 1200)
     guardian_name = models.CharField(max_length = 1200)
@@ -24,8 +24,8 @@ class patient(models.Model):
     assigned_doctor = models.CharField(max_length = 1200)
     is_seen = models.BooleanField(default=False)
 
-class patient_history(models.Model):       
-    user = models.ForeignKey(patient, on_delete=models.CASCADE, related_name='user')
+class Patient_history(models.Model):       
+    user = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='user')
     date = models.DateField()
     diagnosis = models.CharField(max_length = 12000)
     medicine = models.CharField(max_length = 1200)
@@ -36,13 +36,13 @@ class patient_history(models.Model):
     tests = models.CharField(max_length = 1200)
     is_done = models.BooleanField(default=False)
 
-class helpers_nurses(models.Model):
+class Helpers_nurses(models.Model):
     first_name = models.CharField(max_length = 120)
     last_name = models.CharField(max_length = 120)
     flag = models.IntegerField()
     contact = models.CharField(max_length = 12)
     allotted_doctor = models.CharField(max_length = 120)
 
-class medicines(models.Model):
+class Medicines(models.Model):
     name = models.CharField(max_length = 120)
     price = models.IntegerField()

@@ -80,8 +80,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'hospital_management',
-        'USER': 'dev',
-        'PASSWORD': 'dev',
+        'USER': 'dell',
+        'PASSWORD': 'mayank',
         'HOST': 'localhost',
         'PORT': '',
     }
