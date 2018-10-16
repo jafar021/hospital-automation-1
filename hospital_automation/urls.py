@@ -9,5 +9,6 @@ urlpatterns = [
     path('reception', views.reception, name = "reception"),
     path('reception/ajax/<int:id>', views.autocomplete, name="autocomplete"),
     path('doctor/<int:patient_id>',views.prescriptions,name="prescriptions"),
+    path('reception/ajax/load-doctors', views.load_doctors, name='ajax_load_doctors'),
 ]
 

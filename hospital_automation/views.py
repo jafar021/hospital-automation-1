@@ -63,9 +63,9 @@ def autocomplete(request, id):
     if request.is_ajax():
         queryset = User_type.objects.filter(specialization__startswith=request.GET['search'])
         list = []        
-        for i in queryset:
-            if i.specialization not in list:
-                list.append(i.specialization)
+        for problem in queryset:
+            if problem.specialization not in list:
+                list.append(problem.specialization)
         data = {
             'list': list,
         }
@@ -79,3 +79,24 @@ def prescriptions(request,patient_id):
     return render(request,'patient_prescriptions.html',{'prescriptions':patient_prescriptions})
 
     
+def load_doctors(request):
+    if request.is_ajax():
+        problem = request.GET.get('problem')
+        doctor_id = User_type.objects.values('user_id').filter(specialization=problem)
+        doctors = User.objects.values('first_name', 'last_name').filter(id__in=doctor_id)
+        list = []
+        for doctor in doctors:
+            
+            list.append(doctor['first_name']+" "+doctor['last_name'])
+            
+        data = {
+                'list': list,
+            }
+        return JsonResponse(data)
+    if request.method == 'GET':
+        return render(request,'reception.html',{})
+   
+
+
+
+
