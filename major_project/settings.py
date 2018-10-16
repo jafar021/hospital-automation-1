@@ -26,7 +26,7 @@ SECRET_KEY = 'fgl(--=1-r@fpv4nk7f2(*mn#4ojmu72qc)^sw@dmqj9#2z5pt'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    
+
 ]
 
 
@@ -112,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
