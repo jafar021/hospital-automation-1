@@ -11,9 +11,12 @@ from django.shortcuts import render, redirect
 from django.conf.urls import *
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
 counter = 1
 
 
+@login_required
 def doctors(request):
     patient = list(Patient.objects.values().filter(is_seen=False))
     print(patient)
@@ -35,10 +38,7 @@ def receive_patient(request):
         return JsonResponse({}, safe=False)
 
 
-def reception(request):
-    return render(request, 'reception.html', {})
-
-
+@login_required
 def reception(request):
     global counter
     if request.method == 'GET':
@@ -109,6 +109,4 @@ def load_doctors(request):
 
 
 def index(request):
-    if request.user.is_authenticated:
-        pass
     return render(request, 'index.html', {})

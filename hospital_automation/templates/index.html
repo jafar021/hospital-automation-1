@@ -1,10 +1,7 @@
-{% if user.is_authenticated %}
-  <ul>
-    <li><a href="reception">Reception Desk</a></li>
-    <li><a href="accounts/logout">Logout</a></li>
-  </ul>
-{% else %}
 <ul>
-  <li><a href="accounts/login">Login to continue!</a></li>
+  <li><a href="reception">Reception</a></li>
+  <li><a href="doctors">Doctor</a></li>
+  {% if user.is_authenticated %}
+    <li><a href="accounts/logout">Logout</a></li>
+  {% endif %}
 </ul>
-{% endif %}
