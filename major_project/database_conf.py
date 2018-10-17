@@ -1,3 +1,3 @@
-DBNAME = 'hospital_db'
-DBUSER = 'kavach'
-DBPASS = 'zeitgeist13'
+DBNAME = 'hospital_management'
+DBUSER = 'dev'
+DBPASS = 'dev'
