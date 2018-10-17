@@ -20,8 +20,8 @@ counter = 1
 def doctors(request):
     user_group = request.user.groups.values_list('name', flat=True)[0]
     if user_group == 'Doctor':
-        patient = list(Patient.objects.values().filter(is_seen=False))
-        print(patient)
+        patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor = (request.user.first_name+" "+request.user.last_name)))
+        print(request.user.username)
         return render(request, 'incoming_patient.html', {'incoming_patient': patient})
     else:
         return render(request, 'index.html', {'user_group': 'Doctor'})
@@ -29,10 +29,9 @@ def doctors(request):
 
 def receive_patient(request):
     global counter
-    print(counter)
     if request.method == 'GET' and counter == 0:
         incoming_patient = list(Patient.objects.values().filter(
-            is_seen=False).order_by('-id')[:1])
+            is_seen=False, alloted_doctor = request.user.username).order_by('-id')[:1])
         serializer = PatientSerializer(
             incoming_patient, many=True, context={'request': request})
         counter = 1
@@ -90,7 +89,8 @@ def autocomplete(request, id):
 
 
 def prescriptions(request,patient_id):
-    patient_prescriptions = list(Patient_history.objects.values().filter(user_id = patient_id))
+    patient_prescriptions = Patient.objects.values().filter(id = patient_id)
+    print(patient_prescriptions)
     return render(request,'patient_prescriptions.html',{'prescriptions':patient_prescriptions})
 
 def load_doctors(request):
@@ -122,13 +122,13 @@ def send_prescriptions(request,patient_id):
     afternoon_intake = request.POST.getlist('checkbox2[]')
     evening_intake = request.POST.getlist('checkbox3[]')
     tests = request.POST['tests']
-    x = 1
+    medicine_intake = 1
     for medicine in list_of_medicines:
         Patient_history.objects.create(date = date.today(), diagnosis = diagnosis, blood_pressure=blood_pressure, weight=weight,
-                                sugar=sugar,medicine = medicine,morning_intake = True if str(x) in morning_intake else False,
-                                afternoon_intake = True if str(x) in afternoon_intake else False, evening_intake = True if str(x) in evening_intake else False,
+                                sugar=sugar,medicine = medicine,morning_intake = True if str(medicine_intake) in morning_intake else False,
+                                afternoon_intake = True if str(medicine_intake) in afternoon_intake else False, evening_intake = True if str(medicine_intake) in evening_intake else False,
                                 days = 1, tests = tests,user_id=patient_id)
-        x = x+1
+        medicine_intake = medicine_intake+1
     patient = Patient.objects.get(id = patient_id)
     patient.is_seen = True
     patient.save()
@@ -141,11 +141,11 @@ def doctor_details(request):
     doctors_name = User.objects.values('first_name','last_name').filter(id__in=doctor_id)
     doctors_list = []
     
-    for i in range(0,len(doctors_name)):
+    for name in range(0,len(doctors_name)):
         doctors_display_details = {}
-        doctors_display_details['first_name'] = doctors_name[i]['first_name']
-        doctors_display_details['last_name'] = doctors_name[i]['last_name']
-        doctors_display_details['specialization'] = doctor_specializations[i]['specialization']
+        doctors_display_details['first_name'] = doctors_name[name]['first_name']
+        doctors_display_details['last_name'] = doctors_name[name]['last_name']
+        doctors_display_details['specialization'] = doctor_specializations[name]['specialization']
         doctors_list.append(doctors_display_details)
     return render(request, 'doctor_details.html', { 'doctors_list':doctors_list })
 
