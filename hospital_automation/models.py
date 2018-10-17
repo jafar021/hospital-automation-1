@@ -28,11 +28,13 @@ class Patient(models.Model):
 
 
 class Patient_history(models.Model):
-    user = models.ForeignKey(
-        Patient, on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='user')
     date = models.DateField()
-    diagnosis = models.CharField(max_length=12000)
-    medicine = models.CharField(max_length=1200)
+    diagnosis = models.CharField(max_length = 12000)
+    blood_pressure = models.CharField(max_length = 1200,default='NULL')
+    weight = models.CharField(max_length = 1200,default='NULL')
+    sugar = models.CharField(max_length = 1200,default='NULL')
+    medicine = models.CharField(max_length = 1200)
     morning_intake = models.BooleanField(default=False)
     afternoon_intake = models.BooleanField(default=False)
     evening_intake = models.BooleanField(default=False)
