@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <title>Patient Registration</title>
@@ -18,18 +19,20 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 </style>
 <body class="w3-content w3-border-left w3-border-right">
 
+  <!-- sidebar -->
+  <nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+      <div class="" style="height: 150px;">
 
-<!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
-  <div class="w3-container w3-display-container w3-padding-16">
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>View existing Patient</button></p>
-      <a href="helpers"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'helpers' %}"></i>Helpers</button></p></a>
-      <a href="doctor_details"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Statistics</button></p>
-    </form>
-  </div>
-</nav>
-
+      </div>
+        <p><a href="reception" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Reception</button></a></p>
+        <p><a href="doctors" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Doctor</button></a></p>
+        <p><a href="#" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Dispensary</button></a></p>
+        <p><a href="#" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Test</button></a></p>
+        <p><a href="accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
+      </form>
+    </div>
+  </nav>
 <!-- Top menu on small screens -->
 <header class="w3-bar w3-top w3-hide-large w3-teal w3-xlarge">
   <span class="w3-bar-item" style="float:center"><a href="/" style="text-decoration: none;">MountBlue Hospital</a></span>
@@ -52,28 +55,18 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
 
   <div class="w3-container" style="margin-top:15px" id="apartment">
-    <h2 class="w3-text-teal" style="text-align:center">Patient Record</h2>
+
+    {% if user_group %}
+      <p class="w3-text-teal" style="text-align:center">You need to be logged in as {{ user_group }}</p>
+    {% endif %}
+
   </div>
-  <div class="w3-container" id="contact">
 
-    <!-- <h2>Contact</h2>
-    <i class="fa fa-map-marker" style="width:30px"></i> Chicago, US<br>
-    <i class="fa fa-phone" style="width:30px"></i> Phone: +00 151515<br>
-    <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
-    <p>Questions? Go ahead, ask them:</p> -->
-    <form action="/reception" method="POST">{% csrf_token %}
-      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="First Name" required name="First Name" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Last Name" required name="Last Name" style="flex:2; margin-left:5px"></p>
-      <p><input class="w3-input w3-border" type="text" placeholder="Father name" required name="Father name"></p>
-      <p><input class="w3-input w3-border" type="text" placeholder="Address" required name="Address"></p>
-      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="City" required name="City" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="State" required name="State" style="flex:1; margin-left:5px"></p>
-      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="Postal/ZIP code" required name="Postal/ZIP code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Country" required name="Country" style="flex:1; margin-left:5px"></p>
-      <p style="display:flex"><input class="w3-input w3-border" type="text" placeholder="+91" required name="country code" style="flex:1; margin-right:5px"><input class="w3-input w3-border" type="text" placeholder="Contact Number" required name="Contact Number" style="flex:4; margin-right:225px"></p>
-      <p><input class="w3-input w3-border" type="date" name="todays date" required name="date" style="width:30%"></p>
-      <input class="w3-input w3-border" type="text" placeholder="problem" required name="problem" style="width:45%; margin-top:10px; margin-bottom:15px" id="id_input">
-      <input class="w3-input w3-border" type="text" placeholder="Doctor name" required name="Doctor name" style="width:45%; margin-top:10px; margin-bottom:15px" id="input">
+  <div class="image">
+    <img src="{% static 'hospital.jpg' %}" style="width: 720px;" alt="">
+  </div>
 
-    <button type="submit" class="w3-button w3-teal w3-third" style="float:right; margin-top:10px; margin-bottom:15px">Send to Doctor</button>
-    </form>
+
 
 
 <script>
@@ -169,3 +162,16 @@ function showDivs(n) {
 
 </body>
 </html>
+
+
+<!-- {% if user_group %}
+  <p>You need to be logged in as {{ user_group }}</p>
+{% endif %}
+
+<ul>
+  <li><a href="reception">Reception</a></li>
+  <li><a href="doctors">Doctor</a></li>
+  {% if user.is_authenticated %}
+    <li><a href="accounts/logout">Logout</a></li>
+  {% endif %}
+</ul> -->
