@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from hospital_automation.models import User_type, Patient, Patient_history, Helpers_nurses, Medicines
-from datetime import datetime
+from datetime import datetime,date
 from hospital_automation.serializers import PatientSerializer
 from django.shortcuts import render, redirect
 from django.conf.urls import *
@@ -89,12 +89,9 @@ def autocomplete(request, id):
         return render(request, 'reception.html', {})
 
 
-def prescriptions(request, patient_id):
-    patient_prescriptions = list(
-        Patient_history.objects.values().filter(user_id=patient_id))
-    print(patient_prescriptions)
-    return render(request, 'patient_prescriptions.html', {'prescriptions': patient_prescriptions})
-
+def prescriptions(request,patient_id):
+    patient_prescriptions = list(Patient_history.objects.values().filter(user_id = patient_id))
+    return render(request,'patient_prescriptions.html',{'prescriptions':patient_prescriptions})
 
 def load_doctors(request):
     if request.is_ajax():
@@ -115,6 +112,27 @@ def load_doctors(request):
     if request.method == 'GET':
         return render(request,'reception.html',{})
    
+def send_prescriptions(request,patient_id):
+    diagnosis = request.POST['diagnosis']
+    blood_pressure = request.POST['bp']
+    weight =request.POST['weight']
+    sugar = request.POST['sugar']
+    list_of_medicines = request.POST.getlist('medicine')
+    morning_intake = request.POST.getlist('checkbox1[]')
+    afternoon_intake = request.POST.getlist('checkbox2[]')
+    evening_intake = request.POST.getlist('checkbox3[]')
+    tests = request.POST['tests']
+    x = 1
+    for medicine in list_of_medicines:
+        Patient_history.objects.create(date = date.today(), diagnosis = diagnosis, blood_pressure=blood_pressure, weight=weight,
+                                sugar=sugar,medicine = medicine,morning_intake = True if str(x) in morning_intake else False,
+                                afternoon_intake = True if str(x) in afternoon_intake else False, evening_intake = True if str(x) in evening_intake else False,
+                                days = 1, tests = tests,user_id=patient_id)
+        x = x+1
+    patient = Patient.objects.get(id = patient_id)
+    patient.is_seen = True
+    patient.save()
+    return redirect('doctors')
 
 def doctor_details(request):
    
