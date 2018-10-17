@@ -9,8 +9,6 @@ from datetime import datetime
 from hospital_automation.serializers import PatientSerializer
 from django.shortcuts import render, redirect
 from django.conf.urls import *
-from django.http.response import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
 counter = 1
@@ -36,7 +34,8 @@ def receive_patient(request):
         serializer = PatientSerializer(
             incoming_patient, many=True, context={'request': request})
         counter = 1
-        return JsonResponse(serializer.data, safe = False)
+        print(incoming_patient)
+        return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({}, safe=False)
 
@@ -69,7 +68,6 @@ def reception(request):
             return redirect('reception')
     else:
         return render(request, 'index.html', {'user_group': 'Receptionist'})
-
 
 
 @csrf_exempt
@@ -113,28 +111,7 @@ def load_doctors(request):
         }
         return JsonResponse(data)
     if request.method == 'GET':
-        return render(request,'reception.html',{})
-   
-
-def doctor_details(request):
-   
-    doctor_id = User_type.objects.values('user_id').filter(flag=1)
-    doctor_specializations = User_type.objects.values('specialization').filter(flag=1)
-    doctors_name = User.objects.values('first_name','last_name').filter(id__in=doctor_id)
-    doctors_list = []
-    
-    for i in range(0,len(doctors_name)):
-        doctors_display_details = {}
-        doctors_display_details['first_name'] = doctors_name[i]['first_name']
-        doctors_display_details['last_name'] = doctors_name[i]['last_name']
-        doctors_display_details['specialization'] = doctor_specializations[i]['specialization']
-        doctors_list.append(doctors_display_details)
-    return render(request, 'doctor_details.html', { 'doctors_list':doctors_list })
-
-
-def helpers(request):
-    helper_details = Helpers_nurses.objects.values()
-    return render(request, 'helpers.html', { 'helper_details':helper_details })
+        return render(request, 'reception.html', {})
 
 
 def index(request):
