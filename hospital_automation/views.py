@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from hospital_automation.models import User_type, Patient, Patient_history, Helpers_nurses, Medicines
-from datetime import datetime,date
+from datetime import datetime, date
 from hospital_automation.serializers import PatientSerializer
 from django.shortcuts import render, redirect
 from django.conf.urls import *
@@ -21,7 +21,9 @@ counter_for_dispensary = 1
 def doctors(request):
     user_group = request.user.groups.values_list('name', flat=True)[0]
     if user_group == 'Doctor':
-        patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor = (request.user.first_name+" "+request.user.last_name)))
+        patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor=(
+            request.user.first_name+" "+request.user.last_name)))
+        print(request.user.username)
         return render(request, 'incoming_patient.html', {'incoming_patient': patient})
     else:
         return render(request, 'index.html', {'user_group': 'Doctor'})
@@ -30,41 +32,40 @@ def doctors(request):
 def receive_patient(request):
     global counter
     if request.method == 'GET' and counter == 0:
-        incoming_patient = list(Patient.objects.values().filter(
-            is_seen=False, assigned_doctor = request.user.username).order_by('-id')[:1])
-        serializer = PatientSerializer(
+        incoming_patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor=(request.user.first_name+" "+request.user.last_name)).order_by('-id')[:1])
+        serializer=PatientSerializer(
             incoming_patient, many=True, context={'request': request})
-        counter = 1
-        return JsonResponse(serializer.data, safe = False)
+        counter=1
+        return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({}, safe=False)
 
 
 @login_required
 def reception(request):
-    user_group = request.user.groups.values_list('name', flat=True)[0]
+    user_group=request.user.groups.values_list('name', flat=True)[0]
     if(user_group == 'Receptionist'):
         global counter
         if request.method == 'GET':
             return render(request, 'reception.html', {})
         elif request.method == 'POST':
-            first_name = request.POST['First Name']
-            last_name = request.POST['Last Name']
-            father_name = request.POST['Father name']
-            address = request.POST['Address']
-            city = request.POST['City']
-            state = request.POST['State']
-            zip_code = request.POST['Postal/ZIP code']
-            country = request.POST['Country']
-            country_code = request.POST['country code']
-            contact_number = request.POST['Contact Number']
-            date = request.POST['todays date']
-            problem = request.POST['problem']
-            alloted_doctor = request.POST['Doctor name']
+            first_name=request.POST['First Name']
+            last_name=request.POST['Last Name']
+            father_name=request.POST['Father name']
+            address=request.POST['Address']
+            city=request.POST['City']
+            state=request.POST['State']
+            zip_code=request.POST['Postal/ZIP code']
+            country=request.POST['Country']
+            country_code=request.POST['country code']
+            contact_number=request.POST['Contact Number']
+            date=request.POST['todays date']
+            problem=request.POST['problem']
+            alloted_doctor=request.POST['Doctor name']
             Patient.objects.create(first_name=first_name, last_name=last_name, guardian_name=father_name, address=address,
                                    city=city, state=state, zip_code=zip_code, country=country,
                                    country_code=country_code, phone_number=contact_number, date=date, problem_name=problem, assigned_doctor=alloted_doctor)
-            counter = 0
+            counter=0
             return redirect('reception')
     else:
         return render(request, 'index.html', {'user_group': 'Receptionist'})
@@ -74,14 +75,15 @@ def reception(request):
 @csrf_exempt
 def autocomplete(request, id):
     if request.is_ajax():
-        queryset = User_type.objects.filter(
+        queryset=User_type.objects.filter(
             specialization__startswith=request.GET['search'])
-        print(queryset)
-        list = []
+
+        list=[]
+
         for problem in queryset:
             if problem.specialization not in list:
                 list.append(problem.specialization)
-        data = {
+        data={
             'list': list,
         }
         print(list)
@@ -90,24 +92,24 @@ def autocomplete(request, id):
         return render(request, 'reception.html', {})
 
 
-def prescriptions(request,patient_id):
-    patient_prescriptions = Patient.objects.values().filter(id = patient_id)
+def prescriptions(request, patient_id):
+    patient_prescriptions=Patient.objects.values().filter(id=patient_id)
     print(patient_prescriptions)
-    return render(request,'patient_prescriptions.html',{'prescriptions':patient_prescriptions})
+    return render(request, 'patient_prescriptions.html', {'prescriptions': patient_prescriptions})
 
 def load_doctors(request):
     if request.is_ajax():
-        problem = request.GET.get('problem')
-        doctor_id = User_type.objects.values(
+        problem=request.GET.get('problem')
+        doctor_id=User_type.objects.values(
             'user_id').filter(specialization=problem)
-        doctors = User.objects.values(
+        doctors=User.objects.values(
             'first_name', 'last_name').filter(id__in=doctor_id)
-        list = []
+        list=[]
         for doctor in doctors:
 
             list.append(doctor['first_name'] + " " + doctor['last_name'])
 
-        data = {
+        data={
             'list': list,
         }
         return JsonResponse(data)
@@ -127,36 +129,39 @@ def send_prescriptions(request,patient_id):
     tests = request.POST['tests']
     medicine_intake = 1
     for medicine in list_of_medicines:
-        Patient_history.objects.create(date = date.today(), diagnosis = diagnosis, blood_pressure=blood_pressure, weight=weight,
-                                sugar=sugar,medicine = medicine,morning_intake = True if str(medicine_intake) in morning_intake else False,
-                                afternoon_intake = True if str(medicine_intake) in afternoon_intake else False, evening_intake = True if str(medicine_intake) in evening_intake else False,
-                                days = 1, tests = tests,user_id=patient_id)
-        medicine_intake = medicine_intake+1
-    patient = Patient.objects.get(id = patient_id)
-    patient.is_seen = True
+        Patient_history.objects.create(date=date.today(), diagnosis=diagnosis, blood_pressure=blood_pressure, weight=weight,
+                                sugar=sugar, medicine=medicine, morning_intake=True if str(
+                                    medicine_intake) in morning_intake else False,
+                                afternoon_intake=True if str(medicine_intake) in afternoon_intake else False, evening_intake=True if str(medicine_intake) in evening_intake else False,
+                                days=1, tests=tests, user_id=patient_id)
+        medicine_intake=medicine_intake+1
+    patient=Patient.objects.get(id=patient_id)
+    patient.is_seen=True
     patient.save()
     counter_for_dispensary = 0
     return redirect('doctors')
 
 def doctor_details(request):
-   
-    doctor_id = User_type.objects.values('user_id').filter(flag=1)
-    doctor_specializations = User_type.objects.values('specialization').filter(flag=1)
-    doctors_name = User.objects.values('first_name','last_name').filter(id__in=doctor_id)
-    doctors_list = []
-    
-    for name in range(0,len(doctors_name)):
-        doctors_display_details = {}
-        doctors_display_details['first_name'] = doctors_name[name]['first_name']
-        doctors_display_details['last_name'] = doctors_name[name]['last_name']
-        doctors_display_details['specialization'] = doctor_specializations[name]['specialization']
+
+    doctor_id=User_type.objects.values('user_id').filter(flag=1)
+    doctor_specializations=User_type.objects.values(
+        'specialization').filter(flag=1)
+    doctors_name=User.objects.values(
+        'first_name', 'last_name').filter(id__in=doctor_id)
+    doctors_list=[]
+
+    for name in range(0, len(doctors_name)):
+        doctors_display_details={}
+        doctors_display_details['first_name']=doctors_name[name]['first_name']
+        doctors_display_details['last_name']=doctors_name[name]['last_name']
+        doctors_display_details['specialization']=doctor_specializations[name]['specialization']
         doctors_list.append(doctors_display_details)
-    return render(request, 'doctor_details.html', { 'doctors_list':doctors_list })
+    return render(request, 'doctor_details.html', {'doctors_list': doctors_list})
 
 
 def helpers(request):
-    helper_details = Helpers_nurses.objects.values()
-    return render(request, 'helpers.html', { 'helper_details':helper_details })
+    helper_details=Helpers_nurses.objects.values()
+    return render(request, 'helpers.html', {'helper_details': helper_details})
 
 
 def index(request):
