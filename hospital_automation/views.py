@@ -33,7 +33,7 @@ def receive_patient(request):
     global counter
     if request.method == 'GET' and counter == 0:
         incoming_patient = list(Patient.objects.values().filter(
-            is_seen=False, alloted_doctor=request.user.username).order_by('-id')[:1])
+            is_seen=False, assigned_doctor=request.user.username).order_by('-id')[:1])
         serializer = PatientSerializer(
             incoming_patient, many=True, context={'request': request})
         counter = 1
