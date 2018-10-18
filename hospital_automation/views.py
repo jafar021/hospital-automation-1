@@ -21,7 +21,8 @@ counter_for_dispensary = 1
 def doctors(request):
     user_group = request.user.groups.values_list('name', flat=True)[0]
     if user_group == 'Doctor':
-        patient = list(Patient.objects.values().filter(is_seen=False))
+        patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor = (request.user.first_name+" "+request.user.last_name)))
+        print(request.user.username)
         return render(request, 'incoming_patient.html', {'incoming_patient': patient})
     else:
         return render(request, 'index.html', {'user_group': 'Doctor'})
@@ -31,7 +32,7 @@ def receive_patient(request):
     global counter
     if request.method == 'GET' and counter == 0:
         incoming_patient = list(Patient.objects.values().filter(
-            is_seen=False).order_by('-id')[:1])
+            is_seen=False, alloted_doctor = request.user.username).order_by('-id')[:1])
         serializer = PatientSerializer(
             incoming_patient, many=True, context={'request': request})
         counter = 1
@@ -64,7 +65,7 @@ def reception(request):
             Patient.objects.create(first_name=first_name, last_name=last_name, guardian_name=father_name, address=address,
                                    city=city, state=state, zip_code=zip_code, country=country,
                                    country_code=country_code, phone_number=contact_number, date=date, problem_name=problem, assigned_doctor=alloted_doctor)
-            counter_for_dispensary = 0
+            counter = 0
             return redirect('reception')
     else:
         return render(request, 'index.html', {'user_group': 'Receptionist'})
@@ -91,7 +92,8 @@ def autocomplete(request, id):
 
 
 def prescriptions(request,patient_id):
-    patient_prescriptions = list(Patient_history.objects.values().filter(user_id = patient_id))
+    patient_prescriptions = Patient.objects.values().filter(id = patient_id)
+    print(patient_prescriptions)
     return render(request,'patient_prescriptions.html',{'prescriptions':patient_prescriptions})
 
 def load_doctors(request):
