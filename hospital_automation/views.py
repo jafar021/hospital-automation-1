@@ -27,7 +27,7 @@ def doctors(request):
         print(request.user.username)
         return render(request, 'incoming_patient.html', {'incoming_patient': patient})
     else:
-        return render(request, 'index.html', {'user_group': 'Doctor'})
+        return redirect('index')
 
 
 def receive_patient(request):
@@ -70,7 +70,7 @@ def reception(request):
             counter = 0
             return redirect('reception')
     else:
-        return render(request, 'index.html', {'user_group': 'Receptionist'})
+        return redirect('index')
 
 
 @csrf_exempt
@@ -192,7 +192,7 @@ def patient_to_dispensary(request):
             'id', 'first_name', 'last_name').filter(id__in=patient_ids))
         return render(request, 'dispensary.html', {'incoming_patient': patient_names})
     else:
-        return render(request, 'index.html', {'user_group': 'Dispensary'})
+        return redirect('index')
 
 
 @login_required
