@@ -29,4 +29,5 @@ urlpatterns = [
          views.medication_of_patient, name="medication"),
     path('dispensary/<int:patient_id>/is_done',
          views.is_done_with_patient, name="is_done"),
+    path('statistics', views.statistics, name="statistics"),
 ]

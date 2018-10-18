@@ -12,6 +12,7 @@ from django.conf.urls import *
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 counter = 1
 counter_for_dispensary = 1
@@ -237,3 +238,14 @@ def patient_detail(request, patient_id):
     records = Patient_history.objects.filter(user_id=patient_id)
     patient_info = Patient.objects.filter(id=patient_id)
     return render(request, 'patient_detail.html', {'records': records, 'patient_info': patient_info[0]})
+
+
+@login_required
+def statistics(request):
+    number_of_patient_seen_by_doctors = Patient.objects.values(
+        "assigned_doctor").annotate(Count("assigned_doctor")).order_by('assigned_doctor')
+    doctors_seen_details = {}
+    for patients in number_of_patient_seen_by_doctors:
+        doctors_seen_details[str(patients['assigned_doctor'])
+                             ] = patients['assigned_doctor__count']
+    return render(request, 'statistics.html', {'doctors_seen_details': doctors_seen_details})
