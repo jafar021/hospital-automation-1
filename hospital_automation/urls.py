@@ -19,4 +19,5 @@ urlpatterns = [
     path('dispensary',views.patient_to_dispensary,name="dispensary"),
     path('api/receive_incoming_patient_to_dispensary',views.receive_incoming_patient_to_dispensary,name = "incoming_patient_to_dispensary"),
     path('dispensary/<int:patient_id>',views.medication_of_patient,name = "medication"),
+    path('dispensary/<int:patient_id>/is_done',views.is_done_with_patient,name = "is_done"),
 ]

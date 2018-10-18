@@ -22,7 +22,6 @@ def doctors(request):
     user_group = request.user.groups.values_list('name', flat=True)[0]
     if user_group == 'Doctor':
         patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor = (request.user.first_name+" "+request.user.last_name)))
-        print(request.user.username)
         return render(request, 'incoming_patient.html', {'incoming_patient': patient})
     else:
         return render(request, 'index.html', {'user_group': 'Doctor'})
@@ -32,7 +31,7 @@ def receive_patient(request):
     global counter
     if request.method == 'GET' and counter == 0:
         incoming_patient = list(Patient.objects.values().filter(
-            is_seen=False, alloted_doctor = request.user.username).order_by('-id')[:1])
+            is_seen=False, assigned_doctor = request.user.username).order_by('-id')[:1])
         serializer = PatientSerializer(
             incoming_patient, many=True, context={'request': request})
         counter = 1
@@ -188,4 +187,11 @@ def receive_incoming_patient_to_dispensary(request):
 @login_required
 def medication_of_patient(request,patient_id):
     medication = Patient_history.objects.values('medicine','morning_intake','afternoon_intake','evening_intake').filter(user_id = patient_id)
-    pass
+    patient_and_doctor_name = Patient.objects.values('first_name','last_name','assigned_doctor').filter(id = patient_id)
+    return render(request,'medication.html',{'medication':medication,'patient_and_doctor_name':patient_and_doctor_name})
+
+@login_required
+def is_done_with_patient(request,patient_id):
+    patient_history = Patient_history.objects.values().filter(user_id = patient_id)
+    patient_history.update(is_done = True)
+    return redirect('dispensary')
