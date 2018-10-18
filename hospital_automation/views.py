@@ -214,3 +214,14 @@ def medication_of_patient(request, patient_id):
     medication = Patient_history.objects.values(
         'medicine', 'morning_intake', 'afternoon_intake', 'evening_intake').filter(user_id=patient_id)
     pass
+
+
+@login_required
+def patient_records(request):
+    patients = Patient.objects.all()
+    return render(request, 'patient_records.html', {'patients': patients})
+
+
+@login_required
+def patient_detail(request, patient_id):
+    records = Patient_history.objects.filter(user_id=patient_id)

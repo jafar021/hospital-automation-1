@@ -1,0 +1,5 @@
+<ul>
+  {% for patient in patients %}
+  <a href="#"><li>{{ patient.first_name }}&nbsp;{{ patient.last_name }}</li></a>
+  {% endfor %}
+</ul>
