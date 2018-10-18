@@ -128,7 +128,6 @@ def send_prescriptions(request,patient_id):
     evening_intake = request.POST.getlist('checkbox3[]')
     tests = request.POST['tests']
     medicine_intake = 1
-
     for medicine in list_of_medicines:
         Patient_history.objects.create(date=date.today(), diagnosis=diagnosis, blood_pressure=blood_pressure, weight=weight,
                                 sugar=sugar, medicine=medicine, morning_intake=True if str(
