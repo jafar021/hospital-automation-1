@@ -12,3 +12,16 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ['id','first_name', 'last_name','guardian_name','problem_name','assigned_doctor']
+
+class GetPatientName(serializers.ModelSerializer):
+    first_name = serializers.CharField(read_only = True)
+    last_name = serializers.CharField(read_only = True)
+    class Meta:
+        model = Patient
+        fields = ['first_name', 'last_name']
+
+class Patient_historySerializer(serializers.ModelSerializer):
+    patient_name = PatientSerializer(read_only = True)
+    class meta:
+        model = Patient_history
+        fields = ['patient_name']

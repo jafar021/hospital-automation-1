@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
 counter = 1
+counter_for_dispensary = 1
 
 
 @login_required
@@ -83,6 +84,7 @@ def autocomplete(request, id):
         data={
             'list': list,
         }
+        print(list)
         return JsonResponse(data)
     if request.method == 'GET':
         return render(request, 'reception.html', {})
@@ -110,19 +112,20 @@ def load_doctors(request):
         }
         return JsonResponse(data)
     if request.method == 'GET':
-        return render(request, 'reception.html', {})
-
-def send_prescriptions(request, patient_id):
-    diagnosis=request.POST['diagnosis']
-    blood_pressure=request.POST['bp']
-    weight=request.POST['weight']
-    sugar=request.POST['sugar']
-    list_of_medicines=request.POST.getlist('medicine')
-    morning_intake=request.POST.getlist('checkbox1[]')
-    afternoon_intake=request.POST.getlist('checkbox2[]')
-    evening_intake=request.POST.getlist('checkbox3[]')
-    tests=request.POST['tests']
-    medicine_intake=1
+        return render(request,'reception.html',{})
+   
+def send_prescriptions(request,patient_id):
+    global counter_for_dispensary
+    diagnosis = request.POST['diagnosis']
+    blood_pressure = request.POST['bp']
+    weight =request.POST['weight']
+    sugar = request.POST['sugar']
+    list_of_medicines = request.POST.getlist('medicine')
+    morning_intake = request.POST.getlist('checkbox1[]')
+    afternoon_intake = request.POST.getlist('checkbox2[]')
+    evening_intake = request.POST.getlist('checkbox3[]')
+    tests = request.POST['tests']
+    medicine_intake = 1
     for medicine in list_of_medicines:
         Patient_history.objects.create(date=date.today(), diagnosis=diagnosis, blood_pressure=blood_pressure, weight=weight,
                                 sugar=sugar, medicine=medicine, morning_intake=True if str(
@@ -133,6 +136,7 @@ def send_prescriptions(request, patient_id):
     patient=Patient.objects.get(id=patient_id)
     patient.is_seen=True
     patient.save()
+    counter_for_dispensary = 0
     return redirect('doctors')
 
 def doctor_details(request):
@@ -160,3 +164,30 @@ def helpers(request):
 
 def index(request):
     return render(request, 'index.html', {})
+
+@login_required
+def patient_to_dispensary(request):
+    user_group = request.user.groups.values_list('name', flat=True)[0]
+    if user_group == 'Dispensary':
+        patient_ids = Patient_history.objects.values('user_id').distinct().filter(is_done=False)
+        patient_names = list(Patient.objects.values('id','first_name','last_name').filter(id__in=patient_ids))
+        return render(request, 'dispensary.html', {'incoming_patient': patient_names})
+    else:
+        return render(request, 'index.html', {'user_group': 'Dispensary'})
+
+@login_required
+def receive_incoming_patient_to_dispensary(request):
+    global counter_for_dispensary
+    if request.method == 'GET' and counter_for_dispensary == 0:
+        patient_ids = Patient_history.objects.values('user_id').distinct().filter(is_done=False)
+        patient_names = list(Patient.objects.values('id','first_name', 'last_name','guardian_name','problem_name','assigned_doctor').filter(id__in=patient_ids).order_by('-id')[:1])
+        serializer = PatientSerializer(patient_names, many=True, context={'request': request})
+        counter_for_dispensary = 1
+        return JsonResponse(serializer.data, safe = False)
+    else:
+        return JsonResponse({}, safe=False)
+
+@login_required
+def medication_of_patient(request,patient_id):
+    medication = Patient_history.objects.values('medicine','morning_intake','afternoon_intake','evening_intake').filter(user_id = patient_id)
+    pass
