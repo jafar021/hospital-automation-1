@@ -88,17 +88,44 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <h2 class="w3-text-teal" style="text-align:center">Patient Details for {{ patient_info.first_name }}</h2>
     </div>
 
-  <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
+  <div id="board" class="section grey lighten-3" style="height: auto; padding: 5px; overflow-y: scroll">
 
-    {% for record in records %}
-      <div class="card-container">
-            <div class="card">
+
+
                <div class="container">
-                  <p>{{record.date}} Diagnosis: {{record.last_name}} Medicine:{{ record.medicine }} Dosage:(Morning: {% if record.morning_intake %}Yes{% else %}No{% endif %}, Afternoon: {% if record.afternoon_intake %}Yes{% else %}No{% endif %}, Night: {% if record.night_intake %}Yes{% else %}No{% endif %}) Days: {{ record.days }}</p>
+                     <div class="input_fields_wrap w3-hide-small">
+                     <div style="display:flex;">
+                     <span  style="flex:1;"><b style="margin-left:25px;">MEDICINE</b></span>
+                     <span  style="flex:1;"><b style="margin-left:77px;">M</b><b style="margin-left:90px;">D</b><b style="margin-left:90px;">N</b></span>
+                     </div>
+                     </div>
+                 {% for record in records %}
+                      <div style="margin: 10px 25px;">
+                        {{ record.date }}
+                      </div>
+                     <div class="medicine-detail" style="display:flex; margin-top: 10px;">
+                         <span  style="flex:1;"><input class="w3-input w3-border medicine" type="text" value="{{record.medicine}}" name="medicine" name="mytext[]" style="margin-left:25px; width: 100%;" readonly ></span>
+                         <span  style="flex:1;">
+                         {% if record.morning_intake == False %}
+                         <input  name="checkbox1[]" type="checkbox" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+                         {% else %}
+                         <input  name="checkbox1[]" type="checkbox" checked="True" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+                         {% endif %}
+                         {% if record.afternoon_intake == False %}
+                         <input  name="checkbox2[]" type="checkbox" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+                         {% else %}
+                         <input  name="checkbox2[]" type="checkbox" checked="True" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+                         {% endif %}
+                         {% if record.evening_intake == False %}
+                         <input  name="checkbox3[]" type="checkbox" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+                         {% else %}
+                         <input  name="checkbox3[]" type="checkbox" checked="True" style="margin-left:77px;" onclick="return false;" onkeydown="return false;" >
+                         {% endif %}
+                     </div>
+
+                 {% endfor%}
                </div>
-            </div>
-         </div>
-      {% endfor %}
+
 
   </div>
 
