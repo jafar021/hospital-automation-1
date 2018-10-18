@@ -1,5 +1,5 @@
-{% load static %}
-  <!DOCTYPE html>
+{% load staticfiles %}
+<!DOCTYPE html>
 <html>
 <title>Patient Registration</title>
 <meta charset="UTF-8">
@@ -12,31 +12,6 @@
  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
  <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-<script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
-<!-- for auto completion -->
-  <script>
-   jQuery(function() {
-   $("#id_input").on('keyup', function(){
-       var value = $(this).val();
-       $.ajax({
-           url: "http://localhost:8000/api/autocomplete",
-           data: {
-             'search': value
-           },
-           dataType: 'json',
-           success: function (data) {
-               list = data.list;
-               $("#id_input").autocomplete({
-               source: list,
-               minLength: 3
-               });
-           }
-       });
-   });
- });
-   </script>
-
 
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
@@ -44,20 +19,22 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 </style>
 <body class="w3-content w3-border-left w3-border-right">
 
+  <!-- sidebar -->
+  <nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+      <div class="" style="height: 150px;">
 
-
-
-<!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
-  <div class="w3-container w3-display-container w3-padding-16">
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>View existing Patient</button></p>
-      <a href="helpers"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'helpers' %}"></i>Helpers</button></p></a>
-      <a href="doctor_details"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
-      <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Statistics</button></p>
-    </form>
-  </div>
-</nav>
-
+      </div>
+        <p><a href="reception" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Reception</button></a></p>
+        <p><a href="doctors" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Doctor</button></a></p>
+        <p><a href="dispensary" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Dispensary</button></a></p>
+        <p><a href="#" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Test</button></a></p>
+        {% if user.is_authenticated %}
+          <p><a href="accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
+        {% endif %}
+      </form>
+    </div>
+  </nav>
 <!-- Top menu on small screens -->
 <header class="w3-bar w3-top w3-hide-large w3-teal w3-xlarge">
   <span class="w3-bar-item" style="float:center"><a href="/" style="text-decoration: none;">MountBlue Hospital</a></span>
@@ -80,26 +57,20 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
 
   <div class="w3-container" style="margin-top:15px" id="apartment">
-    <h2 class="w3-text-teal" style="text-align:center">Patient Record</h2>
+
+    {% if user_group %}
+      <p class="w3-text-teal" style="text-align:center">You need to be logged in as {{ user_group }}</p>
+    {% endif %}
+
   </div>
 
- {% comment %} Patient block {% endcomment %}
-    <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
-           {% if '/doctor/' in request.path %}
-           {% block patient_prescriptions %}
-           {% endblock %}
-           {% elif '/dispensary' in request.path %}
-           {% block dispensary %}
-           {% endblock %}
-           {% else %}
-           {% block incoming_patient_block %}
-           {% endblock %}
-           {% endif %}
-           {% if 'dispensary/' in request.path%}
-           {% block patient_medication %}
-           {% endblock %}
-           {% endif %}
-    </div>
+  <div class="image">
+    <img src="{% static 'hospital.jpg' %}" style="width: 720px;" alt="">
+  </div>
+
+
+
+
 <script>
 // Script to open and close sidebar when on tablets and phones
 function w3_open() {
@@ -141,5 +112,56 @@ function showDivs(n) {
 }
 </script>
 
+<!-- for auto completion -->
+<script>
+  jQuery(function() {
+  $("#id_input").on('keyup', function(){
+      var value = $(this).val();
+      value = value.toLowerCase();
+      $.ajax({
+          url: "/reception/ajax/1",
+          data: {
+            'search': value
+          },
+          dataType: 'json',
+          success: function (data) {
+              list = data.list;
+              $("#id_input").autocomplete({
+              source: list,
+              minLength: 1
+              });
+          }
+      });
+  });
+});
+  </script>
+
+<script>
+  $("#id_input").change(function () {
+    // var url = $("#reception").attr("data-cities-url");  // get the url of the `load_cities` view
+    var problem = $(this).val();  // get the selected problem ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+      url: "/reception/ajax/load-doctors",                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'problem': problem       // add the problem id to the GET parameters
+      },
+      dataType: 'json',
+      success: function (data) {
+              list = data.list;
+              $("#input").autocomplete({
+              source: list,
+              minLength: 1
+              });
+          }
+    });
+
+  });
+
+
+</script>
+
+
 </body>
 </html>
+

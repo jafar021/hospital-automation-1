@@ -17,9 +17,6 @@ urlpatterns = [
          views.send_prescriptions, name="send_prescriptions"),
     path('doctor_details', views.doctor_details, name="doctor_details"),
     path('helpers', views.helpers, name="helpers"),
-    path('doctor/<int:patient_id>', views.prescriptions, name="prescriptions"),
-    path('reception/ajax/load-doctors',
-         views.load_doctors, name='ajax_load_doctors'),
     path('dispensary', views.patient_to_dispensary, name="dispensary"),
     path('api/receive_incoming_patient_to_dispensary',
          views.receive_incoming_patient_to_dispensary, name="incoming_patient_to_dispensary"),
@@ -28,4 +25,8 @@ urlpatterns = [
     path('patient_records/', views.patient_records, name='patient_records'),
     path('patient_records/<int:patient_id>/',
          views.patient_detail, name='patient_detail'),
+    path('dispensary/<int:patient_id>',
+         views.medication_of_patient, name="medication"),
+    path('dispensary/<int:patient_id>/is_done',
+         views.is_done_with_patient, name="is_done"),
 ]
