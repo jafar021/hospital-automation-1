@@ -77,7 +77,9 @@ def autocomplete(request, id):
     if request.is_ajax():
         queryset=User_type.objects.filter(
             specialization__startswith=request.GET['search'])
+
         list=[]
+
         for problem in queryset:
             if problem.specialization not in list:
                 list.append(problem.specialization)
