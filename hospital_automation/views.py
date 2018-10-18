@@ -235,4 +235,5 @@ def patient_records(request):
 @login_required
 def patient_detail(request, patient_id):
     records = Patient_history.objects.filter(user_id=patient_id)
-    pass
+    patient_info = Patient.objects.filter(id=patient_id)
+    return render(request, 'patient_detail.html', {'records': records, 'patient_info': patient_info[0]})

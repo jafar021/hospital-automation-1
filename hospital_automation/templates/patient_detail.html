@@ -1,7 +1,7 @@
 {% load static %}
   <!DOCTYPE html>
 <html>
-<title>Patient Records</title>
+<title>Patient Detail - {{ patient_info.id }}</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -85,24 +85,22 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
 
     <div class="w3-container" style="margin-top:15px" id="apartment">
-      <h2 class="w3-text-teal" style="text-align:center">Patient Records</h2>
+      <h2 class="w3-text-teal" style="text-align:center">Patient Details for {{ patient_info.first_name }}</h2>
     </div>
+
   <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
-          {% for patient in patients %}
-          <a href="{{ patient.id }}">
-          <div class="card-container">
 
-                  <div id="{{ patient.id }}" class="card">
-                   <div class="container">
-                    <b> {{patient.first_name}} {{patient.last_name}} </b>
-                  </div>
-                </div>
-             </div>
-             </a>
-         {% endfor %}
+    {% for record in records %}
+      <div class="card-container">
+            <div class="card">
+               <div class="container">
+                  <p>{{record.date}} Diagnosis: {{record.last_name}} Medicine:{{ record.medicine }} Dosage:(Morning: {% if record.morning_intake %}Yes{% else %}No{% endif %}, Afternoon: {% if record.afternoon_intake %}Yes{% else %}No{% endif %}, Night: {% if record.night_intake %}Yes{% else %}No{% endif %}) Days: {{ record.days }}</p>
+               </div>
+            </div>
+         </div>
+      {% endfor %}
+
   </div>
-
-
 
 <script>
 // Script to open and close sidebar when on tablets and phones
