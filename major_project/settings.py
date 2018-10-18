@@ -133,4 +133,4 @@ STATICFILES_DIRS = [
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'index'
