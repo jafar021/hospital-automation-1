@@ -32,4 +32,6 @@ urlpatterns = [
     path('patient_records/<int:patient_id>/',
          views.patient_detail, name='patient_detail'),
     path('statistics', views.statistics, name="statistics"),
+
+    path('patient_prescriptions/ajax/<int:id>', views.autocomplete_medicine, name="autocomplete_medicine"),
 ]

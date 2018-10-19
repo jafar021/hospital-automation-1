@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from hospital_automation.models import User_type, Patient, Patient_history, Helpers_nurses
+from hospital_automation.models import User_type, Patient, Patient_history, Helpers_nurses, Medicines
 from datetime import date
 from hospital_automation.serializers import PatientSerializer
 from django.contrib.auth.decorators import login_required
@@ -47,7 +47,7 @@ def reception(request):
     user_group = request.user.groups.values_list('name', flat=True)
     if not user_group:
         return redirect('accounts/login')
-    if(user_group == 'Receptionist'):
+    if(user_group[0] == 'Receptionist'):
         global counter
         global alloted_doctor
         if request.method == 'GET':
@@ -88,7 +88,6 @@ def autocomplete(request, id):
         data = {
             'list': list,
         }
-        print(list)
         return JsonResponse(data)
     if request.method == 'GET':
         return render(request, 'reception.html', {})
@@ -96,7 +95,6 @@ def autocomplete(request, id):
 
 def prescriptions(request, patient_id):
     patient_prescriptions = Patient.objects.values().filter(id=patient_id)
-    print(patient_prescriptions)
     return render(request, 'patient_prescriptions.html', {'prescriptions': patient_prescriptions})
 
 
@@ -193,7 +191,7 @@ def patient_to_dispensary(request):
     user_group = request.user.groups.values_list('name', flat=True)
     if not user_group:
         return redirect('accounts/login')
-    if user_group == 'Dispensary':
+    if user_group[0] == 'Dispensary':
         patient_ids = Patient_history.objects.values(
             'user_id').distinct().filter(is_done_with_dispensary=False)
         patient_names = list(Patient.objects.values(
@@ -307,6 +305,25 @@ def statistics(request):
         doctors_seen_details[str(patients['assigned_doctor'])
                              ] = patients['assigned_doctor__count']
     return render(request, 'statistics.html', {'doctors_seen_details': doctors_seen_details})
+
+
+@csrf_exempt
+def autocomplete_medicine(request, id):
+    if request.is_ajax():
+        queryset = Medicines.objects.filter(
+            name__startswith=request.GET['search'])
+
+        list = []
+
+        for problem in queryset:
+            if problem.name not in list:
+                list.append(problem.name)
+        data = {
+            'list': list,
+        }
+        return JsonResponse(data)
+    if request.method == 'GET':
+        return render(request, 'patient_prescriptions.html', {})
 
 
 def error_404_view(request, exception):

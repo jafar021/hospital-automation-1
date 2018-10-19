@@ -65,7 +65,7 @@
       <span  style="flex:1;"><b style="margin-left:77px;">M</b><b style="margin-left:57px;">D</b><b style="margin-left:57px;">N</b></span>
     </div>
     <div class="medicine-detail" style="display:flex; margin-top: 10px;">
-        <span  style="flex:1;"><input class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="medicine" name="mytext[]" style="margin-left:25px; width: 100%;"></span>
+        <span  style="flex:1;"><input class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="medicine" name="mytext[]" style="margin-left:25px; width: 100%;" id="id_input"></span>
         <span  style="flex:1;">
           <input  name="checkbox1[]" type="checkbox" value="1" style="margin-left:77px;">
           <input  name="checkbox2[]" type="checkbox" value="1" style="margin-left:43px;">
@@ -130,7 +130,9 @@ $(document).ready(function() {
     e.preventDefault();
     if(x < max_fields){ 
       x++;
-      $(wrapper).append('<div class="medicine-detail" style=" margin-top:10px;"><input required name="medicine" class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="mytext[]" style="margin-right:5px"><input name="checkbox1[]" type = "checkbox" value = "'+x+'"><input name="checkbox2[]" type = "checkbox" value = "'+x+'"><input name="checkbox3[]" type = "checkbox" value = "'+x+'"><button href="#" class="remove_field" style="height:25px; margin-bottom:20px;">-</button></div>');
+      $(wrapper).append('<div class="medicine-detail" style=" margin-top:10px;"><input required name="medicine" class="w3-input w3-border medicine" type="text" placeholder="Medicine" name="mytext[]" style="margin-right:5px" id="id_input"><input name="checkbox1[]" type = "checkbox" value = "'+x+'"><input name="checkbox2[]" type = "checkbox" value = "'+x+'"><input name="checkbox3[]" type = "checkbox" value = "'+x+'"><button href="#" class="remove_field" style="height:25px; margin-bottom:20px;">-</button></div>');
+      
+  
     }
   });
   
@@ -139,4 +141,29 @@ $(document).ready(function() {
   })
 });
 </script>
+
+
+<!-- for auto completion -->
+<script>
+  jQuery(function() {
+  $("#id_input").on('keyup', function(){
+      var value = $(this).val();
+      value = value.toLowerCase();
+      $.ajax({
+          url: "/patient_prescriptions/ajax/1",
+          data: {
+            'search': value
+          },
+          dataType: 'json',
+          success: function (data) {
+              list = data.list;
+              $("#id_input").autocomplete({
+              source: list,
+              minLength: 1
+              });
+          }
+      });
+  });
+});
+  </script>
 {% endblock %}
