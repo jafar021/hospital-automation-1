@@ -221,7 +221,7 @@ def medication_of_patient(request, patient_id):
 @login_required
 def is_done_with_patient(request, patient_id):
     patient_history = Patient_history.objects.values().filter(user_id=patient_id)
-    patient_history.update(is_done=True)
+    patient_history.update(is_done_with_dispensary=True)
     return redirect('dispensary')
 
 
@@ -274,7 +274,7 @@ def patient_is_done_with_test(request,patient_id):
     patient_history = Patient_history.objects.values().filter(user_id = patient_id)
     patient_history.update(is_done_with_test = True)
     return redirect('test')
-    
+
 def statistics(request):
     number_of_patient_seen_by_doctors = Patient.objects.values(
         "assigned_doctor").annotate(Count("assigned_doctor")).order_by('assigned_doctor')
@@ -283,3 +283,6 @@ def statistics(request):
         doctors_seen_details[str(patients['assigned_doctor'])
                              ] = patients['assigned_doctor__count']
     return render(request, 'statistics.html', {'doctors_seen_details': doctors_seen_details})
+
+def error_404_view(request, exception):
+    return render(request,'errors/404.html')

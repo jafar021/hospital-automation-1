@@ -21,3 +21,4 @@ urlpatterns = [
     path('', include('hospital_automation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
+handler404 = 'hospital_automation.views.error_404_view'
