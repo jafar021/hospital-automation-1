@@ -47,7 +47,7 @@ def reception(request):
     user_group = request.user.groups.values_list('name', flat=True)
     if not user_group:
         return redirect('accounts/login')
-    if(user_group == 'Receptionist'):
+    if(user_group[0] == 'Receptionist'):
         global counter
         global alloted_doctor
         if request.method == 'GET':
@@ -176,15 +176,15 @@ def index(request):
         user_group = request.user.groups.values_list('name', flat=True)
         if not user_group:
             return redirect('accounts/login')
-
-        if user_group[0] == 'Receptionist':
-            return redirect('reception')
-        elif user_group[0] == 'Doctor':
-            return redirect('doctors')
-        elif user_group[0] == 'Dispensary':
-            return redirect('dispensary')
         else:
-            return redirect('test')
+            if user_group[0] == 'Receptionist':
+                return redirect('reception')
+            elif user_group[0] == 'Doctor':
+                return redirect('doctors')
+            elif user_group[0] == 'Dispensary':
+                return redirect('dispensary')
+            else:
+                return redirect('test')
     return redirect('accounts/login')
 
 
@@ -193,12 +193,13 @@ def patient_to_dispensary(request):
     user_group = request.user.groups.values_list('name', flat=True)
     if not user_group:
         return redirect('accounts/login')
-    if user_group == 'Dispensary':
-        patient_ids = Patient_history.objects.values(
-            'user_id').distinct().filter(is_done_with_dispensary=False)
-        patient_names = list(Patient.objects.values(
-            'id', 'first_name', 'last_name').filter(id__in=patient_ids))
-        return render(request, 'dispensary.html', {'incoming_patient': patient_names})
+    else:
+        if user_group[0] == 'Dispensary':
+            patient_ids = Patient_history.objects.values(
+                'user_id').distinct().filter(is_done_with_dispensary=False)
+            patient_names = list(Patient.objects.values(
+                'id', 'first_name', 'last_name').filter(id__in=patient_ids))
+            return render(request, 'dispensary.html', {'incoming_patient': patient_names})
     return redirect('index')
 
 
@@ -284,7 +285,7 @@ def patient_to_test(request, patient_id):
     user_group = request.user.groups.values_list('name', flat=True)
     if not user_group:
         return redirect('accounts/login')
-    if user_group == 'Test':
+    if user_group[0] == 'Test':
         test_for_patient = Patient_history.objects.values(
             'tests').distinct().filter(user_id=patient_id).exclude(tests__exact='')
         patient_and_doctor_name = Patient.objects.values(
