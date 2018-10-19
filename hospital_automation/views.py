@@ -33,7 +33,7 @@ def receive_patient(request):
     if request.method == 'GET' and counter == 0 and alloted_doctor == (request.user.first_name + " " + request.user.last_name):
         incoming_patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor=(
             request.user.first_name + " " + request.user.last_name)).order_by('-id')[:1])
-        
+
         serializer = PatientSerializer(
             incoming_patient, many=True, context={'request': request})
         counter = 1
@@ -250,12 +250,17 @@ def patient_detail(request, patient_id):
 
 @login_required
 def test(request):
-    patient_ids = Patient_history.objects.values('user_id').distinct().filter(
-        is_done_with_test=False).exclude(tests__exact='')
-    print(patient_ids)
-    patient_names = list(Patient.objects.values('id', 'first_name', 'last_name', 'guardian_name',
-                                                'problem_name', 'assigned_doctor').filter(id__in=patient_ids).order_by('id'))
-    return render(request, 'test.html', {'incoming_patient': patient_names})
+    user_group = request.user.groups.values_list('name', flat=True)
+    if not user_group:
+        return redirect('accounts/login')
+    if user_group[0] == 'Test':
+        patient_ids = Patient_history.objects.values('user_id').distinct().filter(
+            is_done_with_test=False).exclude(tests__exact='')
+        print(patient_ids)
+        patient_names = list(Patient.objects.values('id', 'first_name', 'last_name', 'guardian_name',
+                                                    'problem_name', 'assigned_doctor').filter(id__in=patient_ids).order_by('id'))
+        return render(request, 'test.html', {'incoming_patient': patient_names})
+    return redirect('index')
 
 
 @login_required
@@ -276,11 +281,16 @@ def receive_incoming_patient_for_test(request):
 
 @login_required
 def patient_to_test(request, patient_id):
-    test_for_patient = Patient_history.objects.values(
-        'tests').distinct().filter(user_id=patient_id).exclude(tests__exact='')
-    patient_and_doctor_name = Patient.objects.values(
-        'first_name', 'last_name', 'assigned_doctor').filter(id=patient_id)
-    return render(request, 'test_for_particular_patient.html', {'test_for_patient': test_for_patient, 'patient_and_doctor_name': patient_and_doctor_name})
+    user_group = request.user.groups.values_list('name', flat=True)
+    if not user_group:
+        return redirect('accounts/login')
+    if user_group == 'Test':
+        test_for_patient = Patient_history.objects.values(
+            'tests').distinct().filter(user_id=patient_id).exclude(tests__exact='')
+        patient_and_doctor_name = Patient.objects.values(
+            'first_name', 'last_name', 'assigned_doctor').filter(id=patient_id)
+        return render(request, 'test_for_particular_patient.html', {'test_for_patient': test_for_patient, 'patient_and_doctor_name': patient_and_doctor_name})
+    return redirect('index')
 
 
 def patient_is_done_with_test(request, patient_id):
