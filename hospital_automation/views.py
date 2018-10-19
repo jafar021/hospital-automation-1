@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from hospital_automation.models import User_type, Patient, Patient_history, Helpers_nurses, Medicines
+from hospital_automation.models import User_type, Patient, Patient_history, Helpers_nurses
 from datetime import date
 from hospital_automation.serializers import PatientSerializer
 from django.contrib.auth.decorators import login_required
@@ -15,14 +15,15 @@ counter_for_test = 1
 
 @login_required
 def doctors(request):
-    user_group = request.user.groups.values_list('name', flat=True)[0]
-    if user_group == 'Doctor':
+    user_group = request.user.groups.values_list('name', flat=True)
+    if not user_group:
+        return redirect('accounts/login')
+    if user_group[0] == 'Doctor':
         patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor=(
             request.user.first_name + " " + request.user.last_name)))
         print(request.user.username)
         return render(request, 'incoming_patient.html', {'incoming_patient': patient})
-    else:
-        return redirect('index')
+    return redirect('index')
 
 
 def receive_patient(request):
@@ -40,7 +41,9 @@ def receive_patient(request):
 
 @login_required
 def reception(request):
-    user_group = request.user.groups.values_list('name', flat=True)[0]
+    user_group = request.user.groups.values_list('name', flat=True)
+    if not user_group:
+        return redirect('accounts/login')
     if(user_group == 'Receptionist'):
         global counter
         if request.method == 'GET':
@@ -64,8 +67,7 @@ def reception(request):
                                    country_code=country_code, phone_number=contact_number, date=date, problem_name=problem, assigned_doctor=alloted_doctor)
             counter = 0
             return redirect('reception')
-    else:
-        return redirect('index')
+    return redirect('index')
 
 
 @csrf_exempt
@@ -167,12 +169,15 @@ def helpers(request):
 
 def index(request):
     if request.user.is_authenticated:
-        user_group = request.user.groups.values_list('name', flat=True)[0]
-        if user_group == 'Receptionist':
+        user_group = request.user.groups.values_list('name', flat=True)
+        if not user_group:
+            return redirect('accounts/login')
+
+        if user_group[0] == 'Receptionist':
             return redirect('reception')
-        elif user_group == 'Doctor':
+        elif user_group[0] == 'Doctor':
             return redirect('doctors')
-        elif user_group == 'Dispensary':
+        elif user_group[0] == 'Dispensary':
             return redirect('dispensary')
         else:
             return redirect('test')
@@ -181,15 +186,16 @@ def index(request):
 
 @login_required
 def patient_to_dispensary(request):
-    user_group = request.user.groups.values_list('name', flat=True)[0]
+    user_group = request.user.groups.values_list('name', flat=True)
+    if not user_group:
+        return redirect('accounts/login')
     if user_group == 'Dispensary':
         patient_ids = Patient_history.objects.values(
             'user_id').distinct().filter(is_done_with_dispensary=False)
         patient_names = list(Patient.objects.values(
             'id', 'first_name', 'last_name').filter(id__in=patient_ids))
         return render(request, 'dispensary.html', {'incoming_patient': patient_names})
-    else:
-        return redirect('index')
+    return redirect('index')
 
 
 @login_required
