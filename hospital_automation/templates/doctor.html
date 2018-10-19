@@ -61,11 +61,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <a href="{% url 'doctor_details' %}"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
       <a href="{% url 'statistics' %}"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Statistics</button></p></a>
       {% if user.is_authenticated %}
-<<<<<<< HEAD
-          <p><a href="accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
-=======
+
           <p><a href="/accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
->>>>>>> 2fdd488d96889fa31582af12461149d272577184
+
         {% endif %}
     </form>
   </div>
