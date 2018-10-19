@@ -174,15 +174,15 @@ def index(request):
         user_group = request.user.groups.values_list('name', flat=True)
         if not user_group:
             return redirect('accounts/login')
-
-        if user_group[0] == 'Receptionist':
-            return redirect('reception')
-        elif user_group[0] == 'Doctor':
-            return redirect('doctors')
-        elif user_group[0] == 'Dispensary':
-            return redirect('dispensary')
         else:
-            return redirect('test')
+            if user_group[0] == 'Receptionist':
+                return redirect('reception')
+            elif user_group[0] == 'Doctor':
+                return redirect('doctors')
+            elif user_group[0] == 'Dispensary':
+                return redirect('dispensary')
+            else:
+                return redirect('test')
     return redirect('accounts/login')
 
 
@@ -282,7 +282,7 @@ def patient_to_test(request, patient_id):
     user_group = request.user.groups.values_list('name', flat=True)
     if not user_group:
         return redirect('accounts/login')
-    if user_group == 'Test':
+    if user_group[0] == 'Test':
         test_for_patient = Patient_history.objects.values(
             'tests').distinct().filter(user_id=patient_id).exclude(tests__exact='')
         patient_and_doctor_name = Patient.objects.values(
