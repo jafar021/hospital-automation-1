@@ -1,16 +1,10 @@
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 from hospital_automation.models import User_type, Patient, Patient_history, Helpers_nurses, Medicines
-from datetime import datetime, date
+from datetime import date
 from hospital_automation.serializers import PatientSerializer
-from django.shortcuts import render, redirect
-from django.conf.urls import *
-from django.http.response import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 
@@ -284,6 +278,7 @@ def patient_is_done_with_test(request, patient_id):
     patient_history.update(is_done_with_test=True)
     return redirect('test')
 
+
 def statistics(request):
     number_of_patient_seen_by_doctors = Patient.objects.values(
         "assigned_doctor").annotate(Count("assigned_doctor")).order_by('assigned_doctor')
@@ -293,5 +288,6 @@ def statistics(request):
                              ] = patients['assigned_doctor__count']
     return render(request, 'statistics.html', {'doctors_seen_details': doctors_seen_details})
 
+
 def error_404_view(request, exception):
-    return render(request,'errors/404.html')
+    return render(request, 'errors/404.html')
