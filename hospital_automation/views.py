@@ -193,13 +193,12 @@ def patient_to_dispensary(request):
     user_group = request.user.groups.values_list('name', flat=True)
     if not user_group:
         return redirect('accounts/login')
-    else:
-        if user_group[0] == 'Dispensary':
-            patient_ids = Patient_history.objects.values(
-                'user_id').distinct().filter(is_done_with_dispensary=False)
-            patient_names = list(Patient.objects.values(
-                'id', 'first_name', 'last_name').filter(id__in=patient_ids))
-            return render(request, 'dispensary.html', {'incoming_patient': patient_names})
+    if user_group[0] == 'Dispensary':
+        patient_ids = Patient_history.objects.values(
+            'user_id').distinct().filter(is_done_with_dispensary=False)
+        patient_names = list(Patient.objects.values(
+            'id', 'first_name', 'last_name').filter(id__in=patient_ids))
+        return render(request, 'dispensary.html', {'incoming_patient': patient_names})
     return redirect('index')
 
 
