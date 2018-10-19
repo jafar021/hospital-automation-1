@@ -109,6 +109,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
            {% block patient_medication %}
            {% endblock %}
            {% endif %}
+           {% if 'test' in request.path%}
+           {% block incoming_patient_for_test %}
+           {% endblock %}          
+           {% endif %}
+           {% if 'test/' in request.path%}
+           {% block patient_test %}
+           {% endblock %}          
+           {% endif %}
     </div>
 <script>
 // Script to open and close sidebar when on tablets and phones

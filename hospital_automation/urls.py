@@ -20,4 +20,8 @@ urlpatterns = [
     path('api/receive_incoming_patient_to_dispensary',views.receive_incoming_patient_to_dispensary,name = "incoming_patient_to_dispensary"),
     path('dispensary/<int:patient_id>',views.medication_of_patient,name = "medication"),
     path('dispensary/<int:patient_id>/is_done',views.is_done_with_patient,name = "is_done"),
+    path('test',views.test,name = "test"),
+    path('api/receive_incoming_patient_for_test',views.receive_incoming_patient_for_test,name = "incoming_patient_for_test"),
+    path('test/<int:patient_id>',views.patient_to_test, name = "patient_to_test"),
+    path('test/<int:patient_id>/patient_is_done_with_test',views.patient_is_done_with_test,name = "is_done_with_test"),
 ]
