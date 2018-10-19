@@ -179,7 +179,7 @@ def index(request):
         elif user_group == 'Doctor':
             return redirect('doctors')
         elif user_group == 'Dispensary':
-            return redirect('patient_to_dispensary')
+            return redirect('dispensary')
         else:
             return redirect('test')
     return redirect('accounts/login')
@@ -226,13 +226,14 @@ def medication_of_patient(request, patient_id):
 @login_required
 def is_done_with_patient(request, patient_id):
     patient_history = Patient_history.objects.values().filter(user_id=patient_id)
-    patient_history.update(is_done=True)
+    patient_history.update(is_done_with_dispensary=True)
     return redirect('dispensary')
 
 
 @login_required
 def patient_records(request):
     patients = Patient.objects.all()
+    print(patients)
     return render(request, 'patient_records.html', {'patients': patients})
 
 
