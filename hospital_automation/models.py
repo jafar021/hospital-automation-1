@@ -6,8 +6,7 @@ from .user_type_map import USER_MAP
 
 # Create your models here.
 class User_type(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     flag = models.IntegerField()
     specialization = models.CharField(max_length=1200, default='NULL')
 
