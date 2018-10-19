@@ -17,7 +17,7 @@
     {% endfor %}
     <br>
     {% for test in test_for_patient %}
-        {{ test }}
+        <h5>Test Name: &nbsp;<b>{{ test.tests }}</b></h5>
     {% endfor%}
     <form action = "{{ request.path }}/patient_is_done_with_test" method="POST">
        {% csrf_token %}

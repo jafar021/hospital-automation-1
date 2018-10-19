@@ -17,6 +17,7 @@ from django.db.models import Count
 counter = 1
 counter_for_dispensary = 1
 counter_for_test = 1
+alloted_doctor = ""
 
 
 @login_required
@@ -33,9 +34,11 @@ def doctors(request):
 
 def receive_patient(request):
     global counter
-    if request.method == 'GET' and counter == 0:
+    global alloted_doctor
+    if request.method == 'GET' and counter == 0 and alloted_doctor == (request.user.first_name + " " + request.user.last_name):
         incoming_patient = list(Patient.objects.values().filter(is_seen=False, assigned_doctor=(
             request.user.first_name + " " + request.user.last_name)).order_by('-id')[:1])
+        
         serializer = PatientSerializer(
             incoming_patient, many=True, context={'request': request})
         counter = 1
@@ -49,6 +52,7 @@ def reception(request):
     user_group = request.user.groups.values_list('name', flat=True)[0]
     if(user_group == 'Receptionist'):
         global counter
+        global alloted_doctor
         if request.method == 'GET':
             return render(request, 'reception.html', {})
         elif request.method == 'POST':
