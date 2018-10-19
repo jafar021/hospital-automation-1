@@ -49,7 +49,8 @@ class Patient_history(models.Model):
     evening_intake = models.BooleanField(default=False)
     days = models.IntegerField()
     tests = models.CharField(max_length=1200)
-    is_done = models.BooleanField(default=False)
+    is_done_with_dispensary = models.BooleanField(default=False)
+    is_done_with_test = models.BooleanField(default=False)
 
 
 class Helpers_nurses(models.Model):

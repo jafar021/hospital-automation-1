@@ -16,6 +16,7 @@ from django.db.models import Count
 
 counter = 1
 counter_for_dispensary = 1
+counter_for_test = 1
 
 
 @login_required
@@ -108,7 +109,6 @@ def load_doctors(request):
             'first_name', 'last_name').filter(id__in=doctor_id)
         list = []
         for doctor in doctors:
-
             list.append(doctor['first_name'] + " " + doctor['last_name'])
 
         data = {
@@ -121,6 +121,7 @@ def load_doctors(request):
 
 def send_prescriptions(request, patient_id):
     global counter_for_dispensary
+    global counter_for_test
     diagnosis = request.POST['diagnosis']
     blood_pressure = request.POST['bp']
     weight = request.POST['weight']
@@ -142,6 +143,8 @@ def send_prescriptions(request, patient_id):
     patient.is_seen = True
     patient.save()
     counter_for_dispensary = 0
+    if tests is not "":
+        counter_for_test = 0
     return redirect('doctors')
 
 
@@ -186,10 +189,8 @@ def index(request):
 def patient_to_dispensary(request):
     user_group = request.user.groups.values_list('name', flat=True)[0]
     if user_group == 'Dispensary':
-        patient_ids = Patient_history.objects.values(
-            'user_id').distinct().filter(is_done=False)
-        patient_names = list(Patient.objects.values(
-            'id', 'first_name', 'last_name').filter(id__in=patient_ids))
+        patient_ids = Patient_history.objects.values('user_id').distinct().filter(is_done_with_dispensary=False)
+        patient_names = list(Patient.objects.values('id','first_name','last_name').filter(id__in=patient_ids))
         return render(request, 'dispensary.html', {'incoming_patient': patient_names})
     else:
         return redirect('index')
@@ -199,12 +200,9 @@ def patient_to_dispensary(request):
 def receive_incoming_patient_to_dispensary(request):
     global counter_for_dispensary
     if request.method == 'GET' and counter_for_dispensary == 0:
-        patient_ids = Patient_history.objects.values(
-            'user_id').distinct().filter(is_done=False)
-        patient_names = list(Patient.objects.values('id', 'first_name', 'last_name', 'guardian_name',
-                                                    'problem_name', 'assigned_doctor').filter(id__in=patient_ids).order_by('-id')[:1])
-        serializer = PatientSerializer(
-            patient_names, many=True, context={'request': request})
+        patient_ids = Patient_history.objects.values('user_id').distinct().filter(is_done_with_dispensary=False)
+        patient_names = list(Patient.objects.values('id','first_name', 'last_name','guardian_name','problem_name','assigned_doctor').filter(id__in=patient_ids).order_by('-id')[:1])
+        serializer = PatientSerializer(patient_names, many=True, context={'request': request})
         counter_for_dispensary = 1
         return JsonResponse(serializer.data, safe=False)
     else:
@@ -243,6 +241,42 @@ def patient_detail(request, patient_id):
 
 
 @login_required
+def is_done_with_patient(request,patient_id):
+    patient_history = Patient_history.objects.values().filter(user_id = patient_id)
+    patient_history.update(is_done_with_dispensary = True)
+    return redirect('dispensary')
+
+@login_required
+def test(request):
+    patient_ids = Patient_history.objects.values('user_id').distinct().filter(is_done_with_test=False).exclude(tests__exact='')
+    print(patient_ids)
+    patient_names = list(Patient.objects.values('id','first_name', 'last_name','guardian_name','problem_name','assigned_doctor').filter(id__in=patient_ids).order_by('id'))
+    return render(request,'test.html',{'incoming_patient':patient_names})
+
+
+@login_required
+def receive_incoming_patient_for_test(request):
+    global counter_for_test
+    if request.method == 'GET' and counter_for_test == 0:
+        patient_ids = Patient_history.objects.values('user_id').distinct().filter(is_done_with_test=False).exclude(tests__exact='')
+        patient_names = list(Patient.objects.values('id','first_name', 'last_name','guardian_name','problem_name','assigned_doctor').filter(id__in=patient_ids)[:1])
+        serializer = PatientSerializer(patient_names, many=True, context={'request': request})
+        counter_for_test = 1
+        return JsonResponse(serializer.data, safe = False)
+    else:
+        return JsonResponse({}, safe=False)
+
+@login_required
+def patient_to_test(request,patient_id):
+    test_for_patient = Patient_history.objects.values('tests').distinct().filter(user_id = patient_id).exclude(tests__exact='')
+    patient_and_doctor_name = Patient.objects.values('first_name','last_name','assigned_doctor').filter(id = patient_id)
+    return render(request,'test_for_particular_patient.html',{'test_for_patient':test_for_patient,'patient_and_doctor_name':patient_and_doctor_name})
+
+def patient_is_done_with_test(request,patient_id):
+    patient_history = Patient_history.objects.values().filter(user_id = patient_id)
+    patient_history.update(is_done_with_test = True)
+    return redirect('test')
+    
 def statistics(request):
     number_of_patient_seen_by_doctors = Patient.objects.values(
         "assigned_doctor").annotate(Count("assigned_doctor")).order_by('assigned_doctor')
