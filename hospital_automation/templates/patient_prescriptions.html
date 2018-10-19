@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 {% block hide %}{% endblock %}
 {% block patient_prescriptions %}
+
 <div class="body">
     <h5><b>{{ request.user.first_name }} {{ request.user.last_name }}</b></h5>
     <h6><b>{% for pres in prescriptions %}{{ pres.date }} {% endfor %}</b></h6>
