@@ -33,6 +33,9 @@ class Patient(models.Model):
     assigned_doctor = models.CharField(max_length=1200)
     is_seen = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.first_name + " " + self.last_name
+
 
 class Patient_history(models.Model):
     user = models.ForeignKey(
@@ -51,6 +54,9 @@ class Patient_history(models.Model):
     is_done_with_dispensary = models.BooleanField(default=False)
     is_done_with_test = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.user
+
 
 class Helpers_nurses(models.Model):
     first_name = models.CharField(max_length=120)
@@ -59,7 +65,13 @@ class Helpers_nurses(models.Model):
     contact = models.CharField(max_length=12)
     allotted_doctor = models.CharField(max_length=120)
 
+    def __str__(self):
+        return self.first_name + " " + self.last_name
+
 
 class Medicines(models.Model):
     name = models.CharField(max_length=120)
     price = models.IntegerField()
+
+    def __str__(self):
+        return self.name
