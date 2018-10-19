@@ -14,30 +14,6 @@
  <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 <script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
-<!-- for auto completion -->
-  <script>
-   jQuery(function() {
-   $("#id_input").on('keyup', function(){
-       var value = $(this).val();
-       $.ajax({
-           url: "http://localhost:8000/api/autocomplete",
-           data: {
-             'search': value
-           },
-           dataType: 'json',
-           success: function (data) {
-               list = data.list;
-               $("#id_input").autocomplete({
-               source: list,
-               minLength: 3
-               });
-           }
-       });
-   });
- });
-</script>
-
-
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 .mySlides {display:none}
@@ -52,10 +28,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
     <br>
     <br>
     <div class="w3-container w3-display-container w3-padding-16">
-        <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>View existing Patient</button></p>
-        <a href="helpers"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'helpers' %}"></i>Helpers</button></p></a>
-        <a href="doctor_details"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
-        <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Statistics</button></p>
+      <a href="#"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>View existing Patient</button></p></a>
+      <a href="/helpers"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'helpers' %}"></i>Helpers</button></p></a>
+        <a href="/doctor_details"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
+        <a href="/statistics"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Statistics</button></p></a>
         {% if user.is_authenticated %}
             <p><a href="accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
           {% endif %}
@@ -87,20 +63,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
     <div class="w3-container" style="margin-top:15px" id="apartment">
       <h2 class="w3-text-teal" style="text-align:center">Patient Records</h2>
     </div>
-  <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
-          {% for patient in patients %}
-          <a href="{{ patient.id }}">
-          <div class="card-container">
 
-                  <div id="{{ patient.id }}" class="card">
-                   <div class="container">
-                    <b> {{patient.first_name}} {{patient.last_name}} </b>
-                  </div>
-                </div>
-             </div>
-             </a>
-         {% endfor %}
-  </div>
+    
+
+    
+      {% block all_patient_record_block %}
+      {% endblock %}
+  
+      
 
 
 
@@ -144,5 +114,57 @@ function showDivs(n) {
   dots[slideIndex-1].className += " w3-opacity-off";
 }
 </script>
+
+
+<!-- for auto completion -->
+<script>
+  jQuery(function() {
+  $("#id_input").on('keyup', function(){
+      var value = $(this).val();
+      value = value.toLowerCase();
+      $.ajax({
+          url: "/patient_records/ajax/1",
+          data: {
+            'search': value
+          },
+          dataType: 'json',
+          success: function (data) {
+              list = data.list;
+              $("#id_input").autocomplete({
+              source: list,
+              minLength: 1
+              });
+          }
+      });
+  });
+});
+  </script>
+
+
+<script>
+  $("#id_input").change(function () {
+    // var url = $("#reception").attr("data-cities-url");  // get the url of the `load_cities` view
+    var problem = $(this).val();  // get the selected problem ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+      url: "/patient_records",                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'search': problem       // add the problem id to the GET parameters
+      },
+      dataType: 'json',
+      // success: function (data) {
+      //         list = data.list;
+      //         $("#input").autocomplete({
+      //         source: list,
+      //         minLength: 1
+      //         });
+      //     }
+    });
+
+  });
+
+
+</script>
+
 </body>
 </html>

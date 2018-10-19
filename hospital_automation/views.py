@@ -230,7 +230,9 @@ def is_done_with_patient(request, patient_id):
 @login_required
 def patient_records(request):
     patients = Patient.objects.all()
-    return render(request, 'patient_records.html', {'patients': patients})
+    return render(request, 'all_patient_records.html', {'patients': patients})
+    
+   
 
 
 @login_required
@@ -249,3 +251,23 @@ def statistics(request):
         doctors_seen_details[str(patients['assigned_doctor'])
                              ] = patients['assigned_doctor__count']
     return render(request, 'statistics.html', {'doctors_seen_details': doctors_seen_details})
+
+
+@csrf_exempt
+def load_patient(request, id):
+    if request.is_ajax():
+        queryset = Patient.objects.filter(
+            first_name__startswith=request.GET['search'])
+
+        list = []
+
+        for name in queryset:
+            if name.first_name not in list:
+                list.append(name.first_name)
+        data = {
+            'list': list,
+        }
+        print(list)
+        return JsonResponse(data)
+    if request.method == 'GET':
+        return render(request, 'reception.html', {})

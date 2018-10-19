@@ -52,10 +52,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
     <br>
     <br>
     <div class="w3-container w3-display-container w3-padding-16">
-        <p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>View existing Patient</button></p>
-        <a href="helpers"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'helpers' %}"></i>Helpers</button></p></a>
-        <a href="doctor_details"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
-        <a href="statistics"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Statistics</button></p></a>
+        <a href="/patient_records"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>View existing Patient</button></p></a>
+        <a href="/helpers"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'helpers' %}"></i>Helpers</button></p></a>
+        <a href="/doctor_details"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="{% url 'doctor_details' %}"></i>Doctors on duty</button></p></a>
+        <a href="/statistics"  style="text-decoration:none"><p><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right" href="#"></i>Statistics</button></p></a>
         {% if user.is_authenticated %}
             <p><a href="accounts/logout" style="text-decoration: none;"><button class="w3-button w3-block w3-teal w3-left-align" type="submit"><i class="fa w3-margin-right"></i>Logout</button></a></p>
           {% endif %}
